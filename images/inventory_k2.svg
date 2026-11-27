@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="468" height="258" viewBox="0 0 468 258" font-family="Noto Sans KR, Malgun Gothic, sans-serif">
+<style>text{fill:#dcf1ff} .n{font-family:Bahnschrift, sans-serif;font-weight:600} .b{font-weight:700} .dim{fill-opacity:.62}</style>
+<path d="M0 0h60l6 6v16h-66z" fill="#dcf1ff" fill-opacity="0.07" stroke="#dcf1ff" stroke-opacity="0.35"/>
+<text x="33.0" y="16" font-size="13" text-anchor="middle" class="b" style="fill:#dcf1ff">토파즈</text>
+<path d="M70 0h60l6 6v16h-66z" fill="#dcf1ff" fill-opacity="0.07" stroke="#dcf1ff" stroke-opacity="0.35"/>
+<text x="103.0" y="16" font-size="13" text-anchor="middle" class="b" style="fill:#dcf1ff">오팔</text>
+<path d="M140 0h60l6 6v16h-66z" fill="#f4cf0a" fill-opacity="0.9" stroke="#f4cf0a" stroke-opacity="1"/>
+<text x="173.0" y="16" font-size="13" text-anchor="middle" class="b" style="fill:#1b1700">네모필라</text>
+<path d="M210 0h60l6 6v16h-66z" fill="#dcf1ff" fill-opacity="0.07" stroke="#dcf1ff" stroke-opacity="0.35"/>
+<text x="243.0" y="16" font-size="13" text-anchor="middle" class="b" style="fill:#dcf1ff">오이라</text>
+<text x="468" y="16" font-size="13" text-anchor="end"><tspan class="dim">사용 </tspan><tspan class="n" font-size="16" style="fill:#f4cf0a">68</tspan><tspan class="n dim" font-size="14">/100</tspan></text>
+<text x="0" y="34" font-size="12" class="dim">주머니 4×5</text>
+<text x="100" y="34" font-size="12" class="dim">배낭 · 짐 가방 10×8</text>
+<rect x="-1.5" y="38.5" width="91" height="113" fill="#041018" fill-opacity=".35" stroke="#dcf1ff" stroke-opacity=".45"/>
+<rect x="1.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="23.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="45.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="67.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="1.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="23.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="45.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="67.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="1.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="23.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="45.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="67.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="1.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="23.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="45.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="67.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="1.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="23.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="45.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="67.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="98.5" y="38.5" width="223" height="179" fill="#041018" fill-opacity=".35" stroke="#dcf1ff" stroke-opacity=".45"/>
+<rect x="101.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="123.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="145.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="167.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="189.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="211.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="233.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="255.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="277.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="299.5" y="41.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="101.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="123.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="145.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="167.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="189.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="211.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="233.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="255.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="277.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="299.5" y="63.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="101.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="123.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="145.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="167.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="189.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="211.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="233.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="255.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="277.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="299.5" y="85.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="101.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="123.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="145.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="167.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="189.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="211.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="233.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="255.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="277.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="299.5" y="107.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="101.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="123.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="145.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="167.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="189.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="211.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="233.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="255.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="277.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="299.5" y="129.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="101.5" y="151.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="123.5" y="151.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="145.5" y="151.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="167.5" y="151.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="189.5" y="151.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="211.5" y="151.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="233.5" y="151.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="255.5" y="151.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="277.5" y="151.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="299.5" y="151.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="101.5" y="173.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="123.5" y="173.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="145.5" y="173.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="167.5" y="173.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="189.5" y="173.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="211.5" y="173.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="233.5" y="173.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="255.5" y="173.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="277.5" y="173.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="299.5" y="173.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="101.5" y="195.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="123.5" y="195.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="145.5" y="195.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="167.5" y="195.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="189.5" y="195.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="211.5" y="195.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="233.5" y="195.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="255.5" y="195.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="277.5" y="195.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="299.5" y="195.5" width="19" height="19" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".16" stroke-width=".8"/>
+<rect x="1" y="41" width="20" height="20" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-2.5 -7h5v2.5l1.5 2v9.5a1.5 1.5 0 0 1-1.5 1.5h-5a1.5 1.5 0 0 1-1.5-1.5v-9.5l1.5-2z" transform="translate(11.0 49.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-1.5 2h3M0 0.5v3" transform="translate(11.0 49.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="19.5" y="59.5" font-size="12" text-anchor="end" class="n" style="fill:#f4cf0a">4</text>
+<rect x="23" y="41" width="20" height="20" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-2.5 -7h5v2.5l1.5 2v9.5a1.5 1.5 0 0 1-1.5 1.5h-5a1.5 1.5 0 0 1-1.5-1.5v-9.5l1.5-2z" transform="translate(33.0 49.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-1.5 2h3M0 0.5v3" transform="translate(33.0 49.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="41.5" y="59.5" font-size="12" text-anchor="end" class="n" style="fill:#f4cf0a">5</text>
+<rect x="45" y="41" width="20" height="20" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M0 -3a6 6 0 1 1 -0.01 0z" transform="translate(55.0 49.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-1.5 -4v-3h4l2 2" transform="translate(55.0 49.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="63.5" y="59.5" font-size="12" text-anchor="end" class="n" style="fill:#f4cf0a">2</text>
+<rect x="1" y="63" width="20" height="42" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-6 -8h12v16h-12z" transform="translate(11.0 84.0) scale(0.812)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.72" stroke-linejoin="round" stroke-linecap="round"/><path d="M0 -4v8M-4 0h8" transform="translate(11.0 84.0) scale(0.812)" fill="none" stroke="#dcf1ff" stroke-width="1.72" stroke-linecap="round"/>
+<text x="19.5" y="103.5" font-size="12" text-anchor="end" class="n" style="fill:#f4cf0a">1</text>
+<rect x="23" y="63" width="20" height="42" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M0 -9l2.2 3.5v8h-4.4v-8z" transform="translate(33.0 84.0) scale(0.812)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.72" stroke-linejoin="round" stroke-linecap="round"/><path d="M-3.5 2.5h7M0 2.5v6" transform="translate(33.0 84.0) scale(0.812)" fill="none" stroke="#dcf1ff" stroke-width="1.72" stroke-linecap="round"/>
+<rect x="45" y="63" width="42" height="20" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-9 -4h17v4h-9l-1 6h-4l1-6h-4z" transform="translate(66.0 73.0) scale(0.812)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.72" stroke-linejoin="round" stroke-linecap="round"/><path d="M8 -4v-1.5" transform="translate(66.0 73.0) scale(0.812)" fill="none" stroke="#dcf1ff" stroke-width="1.72" stroke-linecap="round"/>
+<rect x="45" y="85" width="20" height="20" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-6 -6h4v12h-4zM-1 -6h4v12h-4zM4 -6h3v12h-3z" transform="translate(55.0 93.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-6 -3h13" transform="translate(55.0 93.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="63.5" y="103.5" font-size="12" text-anchor="end" class="n" style="fill:#f4cf0a">2</text>
+<rect x="1" y="107" width="20" height="20" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-5 -7h10l1 3-1 11h-10l-1-11z" transform="translate(11.0 115.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-5.5 -4h11" transform="translate(11.0 115.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="19.5" y="125.5" font-size="12" text-anchor="end" class="n" style="fill:#f4cf0a">3</text>
+<rect x="101" y="41" width="64" height="86" rx="3" fill="#f4cf0a" fill-opacity="0.2" stroke="#f4cf0a" stroke-opacity="1" stroke-width="1.6"/>
+<path d="M-9 -10h18v20h-18z" transform="translate(133.0 72.0) scale(1.680)" fill="#f4cf0a" fill-opacity=".16" stroke="#f4cf0a" stroke-width="0.83" stroke-linejoin="round" stroke-linecap="round"/><path d="M-5 -6h10v6h-10zM-6 5h3M-1 5h2M3 5h3M0 -10v-3M-3 -13h6" transform="translate(133.0 72.0) scale(1.680)" fill="none" stroke="#f4cf0a" stroke-width="0.83" stroke-linecap="round"/>
+<text x="133.0" y="106" font-size="12" text-anchor="middle" class="b">안정화</text>
+<text x="133.0" y="120" font-size="12" text-anchor="middle" class="b">장치</text>
+<rect x="167" y="41" width="86" height="20" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-16 -1.5h20l3 -2h9v4h-6l-3 5h-4l1-5h-20z" transform="translate(187.0 51.0) scale(0.875)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.60" stroke-linejoin="round" stroke-linecap="round"/><path d="M-6 -1.5v-2h4" transform="translate(187.0 51.0) scale(0.875)" fill="none" stroke="#dcf1ff" stroke-width="1.60" stroke-linecap="round"/>
+<text x="207" y="56" font-size="12" class="b">장총</text>
+<g transform="translate(244 48)"><path d="M-4 1a4 4 0 1 0 4 -4" fill="none" stroke="#f4cf0a" stroke-width="1.3"/><path d="M0 -6l2 3-3 1z" fill="#f4cf0a"/></g>
+<rect x="299" y="41" width="20" height="86" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-1 -16h2v26h-2z" transform="translate(309.0 65.0) scale(0.625)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="2.24" stroke-linejoin="round" stroke-linecap="round"/><path d="M0 -16a4 4 0 1 0 0.01 0M-3 -7h6" transform="translate(309.0 65.0) scale(0.625)" fill="none" stroke="#dcf1ff" stroke-width="2.24" stroke-linecap="round"/>
+<text x="309.0" y="93" font-size="12" text-anchor="middle" class="b">술</text>
+<text x="309.0" y="107" font-size="12" text-anchor="middle" class="b">식</text>
+<rect x="167" y="63" width="42" height="42" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-9 7l9-14 9 14z" transform="translate(188.0 76.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M0 -7v14M-3 7l3-5 3 5" transform="translate(188.0 76.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="188.0" y="100" font-size="12" text-anchor="middle" class="b">야영</text>
+<rect x="211" y="63" width="42" height="42" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-7 -2l5-7 8 2 2 8-6 7-8-3z" transform="translate(232.0 76.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-2 -9l1 7 7 1M-1 -2l-3 7" transform="translate(232.0 76.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="232.0" y="100" font-size="12" text-anchor="middle" class="b">유물</text>
+<rect x="255" y="63" width="42" height="42" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-7 -2l5-7 8 2 2 8-6 7-8-3z" transform="translate(276.0 76.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-2 -9l1 7 7 1M-1 -2l-3 7" transform="translate(276.0 76.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="276.0" y="100" font-size="12" text-anchor="middle" class="b">유물</text>
+<rect x="211" y="107" width="20" height="20" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-6 -6h4v12h-4zM-1 -6h4v12h-4zM4 -6h3v12h-3z" transform="translate(221.0 115.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-6 -3h13" transform="translate(221.0 115.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="229.5" y="125.5" font-size="12" text-anchor="end" class="n" style="fill:#f4cf0a">2</text>
+<rect x="233" y="107" width="20" height="20" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-6 -6h4v12h-4zM-1 -6h4v12h-4zM4 -6h3v12h-3z" transform="translate(243.0 115.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-6 -3h13" transform="translate(243.0 115.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="251.5" y="125.5" font-size="12" text-anchor="end" class="n" style="fill:#f4cf0a">1</text>
+<rect x="101" y="129" width="42" height="64" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-8 -10l4-2h8l4 2 2 8-3 1v11h-14v-11l-3-1z" transform="translate(122.0 153.3) scale(0.945)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.48" stroke-linejoin="round" stroke-linecap="round"/><path d="M-4 -12l4 5 4-5M0 -7v15" transform="translate(122.0 153.3) scale(0.945)" fill="none" stroke="#dcf1ff" stroke-width="1.48" stroke-linecap="round"/>
+<text x="122.0" y="186" font-size="12" text-anchor="middle" class="b">경갑</text>
+<rect x="145" y="129" width="64" height="64" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<clipPath id="cp17"><rect x="145" y="129" width="64" height="64" rx="3"/></clipPath>
+<path clip-path="url(#cp17)" d="M81 193l64 -64M89 193l64 -64M97 193l64 -64M105 193l64 -64M113 193l64 -64M121 193l64 -64M129 193l64 -64M137 193l64 -64M145 193l64 -64M153 193l64 -64M161 193l64 -64M169 193l64 -64M177 193l64 -64M185 193l64 -64M193 193l64 -64M201 193l64 -64" stroke="#dcf1ff" stroke-opacity=".12" />
+<path d="M-10 -6h20v14h-20z" transform="translate(177.0 153.3) scale(1.440)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="0.97" stroke-linejoin="round" stroke-linecap="round"/><path d="M-10 -1h20M-3 -6v-3h6v3M0 -1v3" transform="translate(177.0 153.3) scale(1.440)" fill="none" stroke="#dcf1ff" stroke-width="0.97" stroke-linecap="round"/>
+<text x="177.0" y="186" font-size="12" text-anchor="middle" class="b">고용주 짐</text>
+<rect x="211" y="129" width="20" height="20" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M0 -6a6 6 0 1 1 -0.01 0zM0 -3a3 3 0 1 0 0.01 0z" transform="translate(221.0 139.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-2 -8.5l2-2 2 2" transform="translate(221.0 139.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<rect x="233" y="129" width="20" height="42" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M0 -9l2.2 3.5v8h-4.4v-8z" transform="translate(243.0 150.0) scale(0.812)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.72" stroke-linejoin="round" stroke-linecap="round"/><path d="M-3.5 2.5h7M0 2.5v6" transform="translate(243.0 150.0) scale(0.812)" fill="none" stroke="#dcf1ff" stroke-width="1.72" stroke-linecap="round"/>
+<rect x="255" y="129" width="42" height="42" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-8 -6h16v12h-16z" transform="translate(276.0 142.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-8 -2h16M-8 2h16M8 0h3" transform="translate(276.0 142.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="276.0" y="166" font-size="12" text-anchor="middle" class="b">드럼</text>
+<rect x="211" y="151" width="20" height="20" rx="3" fill="#dcf1ff" fill-opacity="0.11" stroke="#dcf1ff" stroke-opacity="0.62" stroke-width="1"/>
+<path d="M-2.5 -7h5v2.5l1.5 2v9.5a1.5 1.5 0 0 1-1.5 1.5h-5a1.5 1.5 0 0 1-1.5-1.5v-9.5l1.5-2z" transform="translate(221.0 159.0) scale(0.750)" fill="#dcf1ff" fill-opacity=".16" stroke="#dcf1ff" stroke-width="1.87" stroke-linejoin="round" stroke-linecap="round"/><path d="M-1.5 2h3M0 0.5v3" transform="translate(221.0 159.0) scale(0.750)" fill="none" stroke="#dcf1ff" stroke-width="1.87" stroke-linecap="round"/>
+<text x="229.5" y="169.5" font-size="12" text-anchor="end" class="n" style="fill:#f4cf0a">5</text>
+<g transform="translate(9 164)"><path d="M-4 1a4 4 0 1 0 4 -4" fill="none" stroke="#f4cf0a" stroke-width="1.3"/><path d="M0 -6l2 3-3 1z" fill="#f4cf0a"/></g>
+<text x="20" y="168" font-size="12" class="dim">돌려 넣음</text>
+<text x="5" y="187" font-size="12" class="n" style="fill:#f4cf0a">5</text><text x="20" y="187" font-size="12" class="dim">겹친 개수</text>
+<rect x="2" y="196" width="12" height="12" rx="2" fill="#dcf1ff" fill-opacity=".04" stroke="#dcf1ff" stroke-opacity=".3" stroke-width=".8"/><text x="20" y="206" font-size="12" class="dim">빈 칸</text>
+<text x="334" y="34" font-size="12" class="dim">장착 칸 (격자 밖)</text>
+<text x="334" y="52" font-size="12" class="dim">주무기</text>
+<rect x="334" y="54" width="134" height="14" fill="#dcf1ff" fill-opacity=".05"/>
+<path d="M334 54v14" stroke="#f4cf0a" stroke-width="2"/>
+<text x="340" y="66" font-size="12" class="b">쌍단검</text>
+<text x="334" y="82" font-size="12" class="dim">보조 무기</text>
+<rect x="334" y="84" width="134" height="14" fill="#dcf1ff" fill-opacity=".05"/>
+<path d="M334 84v14" stroke="#f4cf0a" stroke-width="2"/>
+<text x="340" y="96" font-size="12" class="b">투척 단검</text>
+<text x="334" y="112" font-size="12" class="dim">방어구</text>
+<rect x="334" y="114" width="134" height="14" fill="#dcf1ff" fill-opacity=".05"/>
+<path d="M334 114v14" stroke="#f4cf0a" stroke-width="2"/>
+<text x="340" y="126" font-size="12" class="b">여행자 외투</text>
+<text x="334" y="142" font-size="12" class="dim">배낭</text>
+<rect x="334" y="144" width="134" height="14" fill="#dcf1ff" fill-opacity=".05"/>
+<path d="M334 144v14" stroke="#f4cf0a" stroke-width="2"/>
+<text x="340" y="156" font-size="12" class="b">짐 가방 10×8</text>
+<text x="334" y="172" font-size="12" class="dim">장신구</text>
+<rect x="334" y="175" width="22" height="12" rx="2" fill="none" stroke="#dcf1ff" stroke-opacity=".3" stroke-dasharray="2 2"/>
+<rect x="360" y="175" width="22" height="12" rx="2" fill="none" stroke="#dcf1ff" stroke-opacity=".3" stroke-dasharray="2 2"/>
+<rect x="386" y="175" width="22" height="12" rx="2" fill="none" stroke="#dcf1ff" stroke-opacity=".3" stroke-dasharray="2 2"/>
+<text x="414" y="186" font-size="12" class="dim">비어 있음</text>
+<text x="334" y="202" font-size="12" class="dim">복식</text>
+<rect x="334" y="204" width="134" height="14" fill="#dcf1ff" fill-opacity=".05"/>
+<path d="M334 204v14" stroke="#f4cf0a" stroke-width="2"/>
+<text x="340" y="216" font-size="12" class="b">평상복</text>
+<path d="M0 222H468" stroke="#dcf1ff" stroke-opacity=".3"/>
+<rect x="0" y="227" width="3" height="27" fill="#f4cf0a"/>
+<text x="10" y="239" font-size="13" class="b" style="fill:#f4cf0a">지형 안정화 장치 +1</text>
+<text x="132.2" y="239" font-size="12" class="dim">3×4 · 12칸 · 소비</text>
+<text x="10" y="254" font-size="12">보상 방에 설치하면 다음 출발 때 그 구간의 지형 변경 판정 목표 +1</text>
+</svg>

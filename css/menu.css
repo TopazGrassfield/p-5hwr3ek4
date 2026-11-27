@@ -475,6 +475,9 @@ body.clean #pad { display: none; }
 .slot span { right: 6px; bottom: 3px; font-size: 15px; }
 .slot em { font-size: 12px; }
 .weight { margin-top: 9px; font-size: 13px; }
+/* 021: 인벤토리 격자 이미지 — 본문 468×258 그대로, 테마별 1장만 */
+.inv-img { display: none; width: 468px; height: 258px; }
+body:not(.theme-k2):not(.theme-k3) .inv-img.k1, body.theme-k2 .inv-img.k2, body.theme-k3 .inv-img.k3 { display: block; }
 .mapv svg { height: 236px; }
 .mapv text { font-size: 18px; }
 .mapv text.c { font-size: 17px; }

@@ -67,7 +67,7 @@
   /* 012의 6개 메뉴(원정대·인벤토리·지도·기록·설정·저장·나가기) + 011의 아이콘 4개(의뢰·도감·알림·조작) */
   const MENU = [
     { id: 'squad', ko: '원정대', sub: '대원 4/4', code: 'SQUAD · 대원 4' },
-    { id: 'inv', ko: '인벤토리', sub: '짐 7/12', code: 'INVENTORY · 7/12' },
+    { id: 'inv', ko: '인벤토리', sub: '짐 68/100', code: 'INVENTORY · 68/100' },
     { id: 'map', ko: '지도', sub: '방 3/5', code: 'MAP · 심도 11' },
     { id: 'log', ko: '기록', sub: '새 기록 2', code: 'LOG · 18건' },
     { id: 'quest', ko: '의뢰', code: 'REQUEST · 2건' },
@@ -102,12 +102,8 @@
       return `<div class="hdr sq-grid"><span>대원</span><span>체력</span><span style="text-align:center">명중</span><span style="text-align:center">민첩</span><span style="text-align:center">견고함</span></div>${rows}`;
     },
     inv() {
-      const slots = Array.from({ length: 12 }, (_, i) => {
-        const it = ITEMS[i];
-        if (!it) return '<div class="slot empty"></div>';
-        return `<div class="slot"><b>${it[0]}</b>${it[2] ? `<em>${it[2]}</em>` : ''}<span>×${it[1]}</span></div>`;
-      }).join('');
-      return `<div class="inv">${slots}</div><div class="weight"><span>짐 가방</span><span class="bar"><i style="width:58%"></i></span><span>7 / 12</span></div>`;
+      /* 021: 목록형 → 격자 이미지 (tools/inv_screen.py 가 그린 그림, 동작 없음). 테마별 3장, CSS로 하나만 보임 */
+      return ['k1', 'k2', 'k3'].map((t) => `<img class="inv-img ${t}" src="images/inventory_${t}.png" width="468" height="258" alt="">`).join('');
     },
     map() {
       return `<div class="mapv"><svg viewBox="20 52 640 256">
