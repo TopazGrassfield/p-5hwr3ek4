@@ -378,9 +378,111 @@ body.clean #pad { display: none; }
 
 .guard { position: absolute; border: 2px dashed #ff4fb0; z-index: 99; pointer-events: none; }
 
+/* =====================================================================
+   016 — 가운데 원형 창 (위아래가 지름의 10%씩 평평하게 깎인 원, 중심 820,402 반지름 356)
+   판(유리 0 / 글자 22 / 버튼 40)보다 앞 층 48px에 떠 있음. 판 위에는 그림자·투영 빛·소켓 윤곽만 남김.
+   ===================================================================== */
+#L-win { translate: 0 0 48px; color: var(--holo); text-shadow: 0 0 9px rgba(var(--frame-rgb),.35), 0 1px 2px rgba(0,0,0,.85); }
+#L-win > svg { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+/* 창 유리: 맑은 푸른 유리 + 가장자리로 갈수록 진해지는 테 (JS가 clip-path로 모양을 자름) */
+#win { position: absolute; pointer-events: none; overflow: hidden;
+  background:
+    radial-gradient(closest-side, transparent 0%, transparent 86%, rgba(var(--frame-rgb),.14) 100%),
+    linear-gradient(180deg, rgba(3,12,22,.46) 0%, rgba(3,12,22,.40) 45%, rgba(3,12,22,.22) 72%, rgba(3,12,22,.10) 100%),
+    linear-gradient(180deg, rgba(var(--frame-rgb),.07), rgba(var(--frame-rgb),.02) 50%, rgba(var(--frame-rgb),.05)); }
+#win .w-scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(var(--holo-rgb),.035) 0 1px, transparent 1px 3px); }
+#win .w-scan::after { content: ''; position: absolute; left: 0; right: 0; height: 90px; top: -90px;
+  background: linear-gradient(180deg, transparent, rgba(var(--frame-rgb),.06) 70%, rgba(var(--frame-rgb),.12) 98%, transparent);
+  animation: wroll 7s linear infinite; }
+@keyframes wroll { to { transform: translateY(700px); } }
+#win .w-sheen { position: absolute; inset: 0; background: linear-gradient(118deg, transparent 22%, rgba(255,255,255,.05) 30%, transparent 40%); }
+/* 창 가장자리·링 */
+#wring .w-edge-glow { fill: none; stroke: rgba(var(--frame-rgb),.35); stroke-width: 7; filter: blur(4px); }
+#wring .w-edge { fill: none; stroke: rgba(var(--frame-rgb),.85); stroke-width: 1.6; filter: drop-shadow(0 0 4px rgba(var(--frame-rgb),.7)); }
+#wring .w-in { fill: none; stroke: rgba(var(--frame-rgb),.3); stroke-width: 1; stroke-dasharray: 2 6; }
+#wring .w-acc { fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; filter: drop-shadow(0 0 4px rgba(var(--acc-rgb),.85)); }
+#wring .w-rail { fill: none; stroke: rgba(var(--frame-rgb),.6); stroke-width: 1.4; }
+#wring .w-tick { fill: none; stroke: rgba(var(--frame-rgb),.55); stroke-width: 1.4; }
+#wring .w-ring { fill: none; stroke: rgba(var(--frame-rgb),.45); stroke-width: 1.1; }
+#wring .w-tk { stroke: rgba(var(--frame-rgb),.35); stroke-width: 1.2; }
+#wring .w-tk.l { stroke: rgba(var(--frame-rgb),.7); stroke-width: 1.6; }
+#wring .w-acc-arc { fill: none; stroke: var(--accent); stroke-width: 3; opacity: .8; filter: drop-shadow(0 0 4px rgba(var(--acc-rgb),.7)); }
+#wring .w-br { fill: none; stroke: rgba(var(--frame-rgb),.6); stroke-width: 4; filter: drop-shadow(0 0 3px rgba(var(--frame-rgb),.5)); }
+#wring .w-br2 { fill: none; stroke: rgba(var(--frame-rgb),.32); stroke-width: 1.2; stroke-dasharray: 3 5; }
+.spin-win { animation: spin 120s linear infinite; }
+/* 판 위: 창 그림자(유리층) + 투영 빛(링 층) + 소켓 점선 */
+#glass .w-shadow { position: absolute; border-radius: 50% / 46%; background: radial-gradient(closest-side, rgba(0,0,0,.42), rgba(0,0,0,.18) 70%, transparent); filter: blur(14px); }
+#L-ring .w-proj { position: absolute; pointer-events: none; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(var(--frame-rgb),.0) 80%, rgba(var(--frame-rgb),.10) 92%, rgba(var(--frame-rgb),.0) 100%),
+              radial-gradient(closest-side, rgba(var(--frame-rgb),.06), transparent 75%); }
+#ring .sock { fill: none; stroke: rgba(var(--frame-rgb),.32); stroke-width: 1.2; stroke-dasharray: 4 6; }
+#ring .sock.d { stroke: rgba(var(--frame-rgb),.16); stroke-dasharray: 1 7; }
+
+/* 원 안 배치 (평면 좌표). 원 폭: y=132 → 464px, y=240 → 634px, y=624 → 556px, y=668 → 474px */
+#title { left: 600px; top: 128px; width: 440px; height: 44px; justify-content: center; gap: 12px; }
+#title h1 { font-size: 28px; letter-spacing: 4px; }
+#status { left: 570px; top: 180px; width: 500px; height: 52px; }
+#status .st-i { padding: 3px 0 0 14px; }
+#status .st-i:first-child { border-left: 0; }
+#status .st-k { font-size: 13px; letter-spacing: 1px; }
+#status .st-v { margin-top: 3px; font-size: 16px; }
+#status .st-v b { font-size: 22px; }
+#panel { left: 552px; top: 240px; width: 536px; height: 386px; background: none; border-top: 1px solid rgba(var(--frame-rgb),.4); }
+.scr-head { left: 14px; right: 14px; top: 10px; height: 42px; gap: 10px; }
+.scr-head h2 { font-size: 25px; }
+.scr-code { font-size: 13px; letter-spacing: 1px; }
+.scr-live { font-size: 13px; }
+.scr-body { left: 16px; right: 16px; top: 64px; bottom: 44px; }
+.scr-foot { left: 30px; right: 30px; bottom: 8px; height: 26px; font-size: 13px; }
+#hints { left: 610px; top: 634px; width: 420px; height: 34px; font-size: 14px; }
+#hints .kc { min-width: 24px; height: 22px; font-size: 13px; }
+#hints em { margin: 0 9px 0 2px; }
+/* 메뉴별 내용 — 원 안 504×278에 맞춤, 글자 최소 12px */
+.hdr { font-size: 13px; padding-bottom: 4px; letter-spacing: 0; }
+.sq-grid { grid-template-columns: 146px 1fr 38px 38px 46px; column-gap: 6px; }
+.sq-row { height: 58px; }
+.sq-who { gap: 9px; }
+.port { width: 38px; height: 38px; font-size: 16px; border-radius: 8px; }
+.sq-name { font-size: 17px; }
+.sq-role { font-size: 13px; margin-top: 2px; }
+.hp { gap: 6px; }
+.hp-cells i { width: 8px; height: 14px; }
+.hp b { font-size: 15px; }
+.hp b small { font-size: 12px; }
+.st { font-size: 21px; }
+.inv { gap: 8px; }
+.slot { height: 64px; padding: 7px 8px; border-radius: 7px; }
+.slot b { font-size: 14px; line-height: 1.25; }
+.slot span { right: 7px; bottom: 4px; font-size: 16px; }
+.slot em { font-size: 12px; }
+.weight { margin-top: 12px; font-size: 14px; }
+.mapv svg { height: 256px; }
+.mapv text { font-size: 18px; }
+.mapv text.c { font-size: 16px; }
+.log li { grid-template-columns: 50px 86px 1fr; gap: 10px; padding: 9px 0; font-size: 15px; }
+.log li time { font-size: 15px; }
+.log li em { font-size: 13px; }
+.list li { grid-template-columns: 56px 1fr; gap: 10px; padding: 10px 0; font-size: 15px; }
+.list li .k { font-size: 14px; }
+.list li em { font-size: 13px; }
+.list.keys li { grid-template-columns: 150px 1fr; padding: 9px 0; }
+.codex { gap: 10px; }
+.codex div { height: 104px; padding: 10px; }
+.codex div b { font-size: 16px; }
+.codex div span { font-size: 13px; }
+.opt { grid-template-columns: 120px 1fr; height: 52px; font-size: 16px; }
+.seg span { padding: 4px 12px; font-size: 14px; }
+.slider .bar { width: 220px; }
+.save p { font-size: 16px; line-height: 1.55; }
+.save .slotcard { margin: 16px 0; padding: 11px 16px; }
+.save .slotcard b { font-size: 17px; }
+.save .slotcard span { font-size: 13px; }
+.save .slotcard time { font-size: 22px; }
+.save .acts span { padding: 11px 0; font-size: 15px; }
+
 @media (prefers-reduced-motion: reduce) {
-  .spin-slow, .spin-rev, .spin-code, #glass .scanlines::after, .scr-live i, .sig-led, .ck-led i, .mapv .pulse { animation: none !important; }
+  .spin-slow, .spin-rev, .spin-code, .spin-win, #win .w-scan::after, #glass .scanlines::after, .scr-live i, .sig-led, .ck-led i, .mapv .pulse { animation: none !important; }
 }
-body.still .spin-slow, body.still .spin-rev, body.still .spin-code, body.still #glass .scanlines::after { animation-play-state: paused; }
+body.still .spin-slow, body.still .spin-rev, body.still .spin-code, body.still .spin-win, body.still #win .w-scan::after, body.still #glass .scanlines::after { animation-play-state: paused; }
 body.still *, body.still *::before, body.still *::after { transition: none !important; }
 body.still .swap-in { animation: none !important; }

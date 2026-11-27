@@ -31,6 +31,22 @@
     + 'C1400 852 1350 822 1312 786 C1292 770 1272 768 1240 768 L1080 768 L1064 780 L576 780 L560 768 L400 768 '
     + 'C368 768 348 770 328 786 C290 822 240 852 160 852 C50 852 0 760 4 600 L8 200 C10 100 50 40 150 40 Z';
   const LA = { cx: 1200, cy: 430, r1: 880, r2: 1100 };
+  /* 016 가운데 원형 창: 중심 (820,402) 반지름 356 (지름 712). 위·아래를 지름의 10%(71px)씩 수평으로 잘라 평평하게.
+     좌우 버튼은 015 그대로 두고 원 크기로 맞춤 → 창 가장자리와 오른쪽 육각 사이 약 87px, 왼쪽 버튼 사이 약 143px, 실루엣 위·아래 선 사이 약 95px. */
+  const W = { cx: 820, cy: 402, R: 356, cut: 0.10, z: 48 };
+  W.h = W.R * (1 - 2 * W.cut); W.w = Math.sqrt(W.R * W.R - W.h * W.h); // 평평한 변의 반폭
+  // 위아래가 평평한 원 경로 (ox,oy = 원점 이동, d = 반지름 늘림)
+  const winPath = (d = 0, ox = 0, oy = 0) => {
+    const R = W.R + d, h = W.h + d, w = Math.sqrt(R * R - h * h), x = W.cx - ox, y = W.cy - oy;
+    return `M${(x - w).toFixed(1)} ${(y - h).toFixed(1)} H${(x + w).toFixed(1)} A${R} ${R} 0 0 1 ${(x + w).toFixed(1)} ${(y + h).toFixed(1)} H${(x - w).toFixed(1)} A${R} ${R} 0 0 1 ${(x - w).toFixed(1)} ${(y - h).toFixed(1)} Z`;
+  };
+  // 점과 창 가장자리 사이 거리 (창 밖이면 양수)
+  const winDist = (px, py) => {
+    const dx = px - W.cx, dy = py - W.cy, L = Math.hypot(dx, dy);
+    if (Math.abs(dy) <= W.h || Math.abs(dy) / L <= W.h / W.R) return L - W.R; // 가장 가까운 점이 둥근 변
+    if (Math.abs(dx) <= W.w) return Math.abs(dy) - W.h;                          // 평평한 변
+    return Math.hypot(Math.abs(dx) - W.w, Math.abs(dy) - W.h);
+  };
   const RA = { cx: 440, cy: 430, r: 880 };
 
   /* ---------- 아이콘 (SVG 직접, 24 격자) ---------- */
@@ -92,7 +108,7 @@
       return `<div class="inv">${slots}</div><div class="weight"><span>짐 가방</span><span class="bar"><i style="width:58%"></i></span><span>7 / 12</span></div>`;
     },
     map() {
-      return `<div class="mapv"><svg viewBox="0 0 660 340">
+      return `<div class="mapv"><svg viewBox="20 52 640 256">
         <path class="ln" d="M60 230 L200 160 L350 180"/><path class="ln d" d="M350 180 L500 100 L620 170 M350 180 L500 250 L620 170"/>
         <circle class="pulse" cx="350" cy="180" r="16"/>
         <circle class="nd" cx="60" cy="230" r="14"/><circle class="nd" cx="200" cy="160" r="14"/><circle class="nd cur" cx="350" cy="180" r="16"/>
@@ -250,22 +266,58 @@
     const [x0, y0] = p(a0), [x1, y1] = p(a1);
     return `M${f1(x0)} ${f1(y0)} A${r} ${r} 0 ${Math.abs(a1 - a0) > 180 ? 1 : 0} 1 ${f1(x1)} ${f1(y1)}`;
   };
-  const ticks = $('#ticks');
-  for (let k = 0; k < 180; k++) {
-    const a = (k / 180) * Math.PI * 2, long = k % 10 === 0;
-    const r1 = 330, r2 = long ? 316 : 324;
-    mk(ticks, 'line', { class: long ? 'tick l' : 'tick', x1: f1(C.x + Math.cos(a) * r1), y1: f1(C.y + Math.sin(a) * r1), x2: f1(C.x + Math.cos(a) * r2), y2: f1(C.y + Math.sin(a) * r2) });
+  const ticks = null; // 016: 화면 뒤 큰 계기 링 대신 원형 창 바깥 링 (아래 '원형 창')
+  /* ---------- 원형 창 (016) ---------- */
+  {
+    const win = $('#win');
+    Object.assign(win.style, { left: f1(W.cx - W.R) + 'px', top: f1(W.cy - W.h) + 'px', width: f1(2 * W.R) + 'px', height: f1(2 * W.h) + 'px',
+      clipPath: `path("${winPath(0, W.cx - W.R, W.cy - W.h)}")` });
+    $('#wBandR').setAttribute('y', f1(W.cy - W.h)); $('#wBandR').setAttribute('height', f1(2 * W.h));
+    $('#wSpin').style.transformOrigin = `${W.cx}px ${W.cy}px`;
+    const st = $('#wStatic'), bs = $('#wBandStatic'), sp = $('#wSpin');
+    const arc = (r, a0, a1) => arcD(r, a0, a1, W.cx, W.cy);
+    // 창 가장자리 (위아래 평평) + 안쪽 가는 점선
+    mk(st, 'path', { class: 'w-edge-glow', d: winPath(0) });
+    mk(st, 'path', { class: 'w-edge', d: winPath(0) });
+    mk(st, 'path', { class: 'w-in', d: winPath(-9) });
+    // 평평한 변 강조: 가운데 홈 + 양 끝 바깥으로 짧게 뻗은 선(잘린 면임을 보여 줌)
+    [-1, 1].forEach((s) => {
+      const y = W.cy + s * W.h;
+      mk(st, 'path', { class: 'w-acc', d: `M${W.cx - 34} ${f1(y)} H${W.cx + 34}` });
+      mk(st, 'path', { class: 'w-rail', d: `M${f1(W.cx - W.w - 46)} ${f1(y)} H${f1(W.cx - W.w - 12)} M${f1(W.cx + W.w + 12)} ${f1(y)} H${f1(W.cx + W.w + 46)}` });
+      for (let k = -3; k <= 3; k++) if (k) mk(st, 'path', { class: 'w-tick', d: `M${W.cx + k * 18 + (k < 0 ? -22 : 22)} ${f1(y + s * 6)} v${s * 5}` });
+    });
+    // 링 1: 바깥 가는 원 (평평한 변 높이까지만 = 위아래가 잘린 원으로 읽힘)
+    mk(bs, 'circle', { class: 'w-ring', cx: W.cx, cy: W.cy, r: W.R + 12 });
+    // 링 2: 눈금 링 (천천히 회전)
+    for (let k = 0; k < 120; k++) {
+      const a = k * 3 * Math.PI / 180, long = k % 5 === 0, r1 = W.R + 20, r2 = r1 + (long ? 9 : 4);
+      mk(sp, 'line', { class: long ? 'w-tk l' : 'w-tk', x1: f1(W.cx + Math.cos(a) * r1), y1: f1(W.cy + Math.sin(a) * r1), x2: f1(W.cx + Math.cos(a) * r2), y2: f1(W.cy + Math.sin(a) * r2) });
+    }
+    mk(sp, 'path', { class: 'w-acc-arc', d: arc(W.R + 34, 196, 214) });
+    mk(sp, 'path', { class: 'w-acc-arc', d: arc(W.R + 34, 16, 24) });
+    // 링 3: 좌우 끊긴 굵은 호 (레퍼런스의 양옆 괄호 호 — 배치 원리만)
+    [[150, 172], [178, 194], [200, 210], [-30, -8], [-2, 14], [20, 30]].forEach(([a0, a1]) => mk(st, 'path', { class: 'w-br', d: arc(W.R + 40, a0, a1) }));
+    [[163, 197], [-17, 17]].forEach(([a0, a1]) => mk(st, 'path', { class: 'w-br2', d: arc(W.R + 48, a0, a1) }));
+    // 판 위 소켓(창이 비친 자리): 창보다 조금 큰 점선 윤곽 → 창이 판에서 떠 있는 높이를 보여 줌
+    const sock = $('#sock');
+    mk(sock, 'path', { class: 'sock', d: winPath(10) });
+    mk(sock, 'path', { class: 'sock d', d: winPath(24) });
+    const proj = $('#L-ring .w-proj');
+    Object.assign(proj.style, { left: f1(W.cx - W.R - 40) + 'px', top: f1(W.cy - W.h - 30) + 'px', width: f1(2 * W.R + 80) + 'px', height: f1(2 * W.h + 60) + 'px' });
+    const sh = $('#glass .w-shadow');
+    Object.assign(sh.style, { left: f1(W.cx - W.R - 10) + 'px', top: f1(W.cy - W.h + 26) + 'px', width: f1(2 * W.R + 20) + 'px', height: f1(2 * W.h + 20) + 'px' });
   }
-  $('#codePath').setAttribute('d', `M${C.x - 346} ${C.y} a346 346 0 1 1 692 0 a346 346 0 1 1 -692 0`);
-  // 버튼 → 화면 가장자리 전선 (왼쪽 큰 버튼 4 + 오른쪽 안쪽 열 육각 2)
+  // 버튼 → 판 위 소켓 링 전선 (왼쪽 큰 버튼 4 + 오른쪽 안쪽 열 육각 2)
   const wires = [];
   const hrow = (mi) => (mi >= 4 && mi <= 9 ? (HPOS[mi - 4].rr < 1 ? 0 : 1) : -1);
+  const sockX = (y, s) => W.cx + s * Math.sqrt((W.R + 10) ** 2 - (y - W.cy) ** 2);
   KEYS.forEach((K, i) => {
     if (K.kind !== 'big' && !(K.kind === 'sq' && K.hex.c === 0)) return;
     const y0 = K.cy;
     const x0 = K.kind === 'big' ? xi(y0) + 4 : K.x - 4;
-    const x1 = K.kind === 'big' ? 432 : 1208;
-    const y1 = 190 + (K.kind === 'big' ? K.menu : hrow(K.menu) * 2 + 4) * 52;
+    const y1 = K.kind === 'big' ? 250 + K.menu * 52 : 300 + hrow(K.menu) * 80;
+    const x1 = sockX(y1, K.kind === 'big' ? -1 : 1);
     const xm = (x0 + x1) / 2;
     const p = mk(ringSvg, 'path', { class: 'wire', d: `M${f1(x0)} ${f1(y0)} H${f1(xm)} L${f1(x1 + (K.kind === 'big' ? -10 : 10))} ${f1(y1)} H${f1(x1)}` });
     const n = mk(ringSvg, 'circle', { class: 'wnode', cx: f1(x1), cy: f1(y1), r: 3 });
@@ -342,11 +394,7 @@
   // 글자 (거울 안 함): 어깨 버튼 표시, 모델명
   mk(near, 'text', { x: 132, y: 30 }, 'L'); mk(near, 'text', { x: 1500, y: 30 }, 'R');
   mk(near, 'text', { class: 'lbl', x: 820, y: 818, 'text-anchor': 'middle' }, '관리기구 휴대 단말 · KG-07');
-  // 화면 테두리 (012의 화면 구역선 + 모서리 꺾쇠) + 옆 눈금
-  mk(edge, 'rect', { class: 'bezel', x: 420, y: 34, width: 800, height: 716, rx: 10 });
-  [['M420 70 V44 A10 10 0 0 1 430 34 H462'], ['M1178 34 H1210 A10 10 0 0 1 1220 44 V70'], ['M1220 714 V740 A10 10 0 0 1 1210 750 H1178'], ['M462 750 H430 A10 10 0 0 1 420 740 V714']]
-    .forEach(([d]) => mk(edge, 'path', { class: 'bk', d }));
-  for (let y = 180; y <= 660; y += 40) { mk(edge, 'path', { class: 'mid', d: `M420 ${y} h${y % 120 === 60 ? 10 : 5}` }); mk(edge, 'path', { class: 'mid', d: `M1220 ${y} h-${y % 120 === 60 ? 10 : 5}` }); }
+  // 016: 사각 화면 테두리(bezel·꺾쇠·옆 눈금)는 원형 창으로 바뀌어 그리지 않음
 
   const maskSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="860" viewBox="0 0 1640 860"><filter id="b" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="6"/></filter><path d="${SIL}" fill="#fff" filter="url(#b)"/></svg>`;
   const maskUrl = `url("data:image/svg+xml,${encodeURIComponent(maskSvg)}")`;
@@ -385,7 +433,7 @@
     body.innerHTML = SCREENS[m.id]();
     if (animate && motion) {
       body.classList.remove('swap-in'); void body.offsetWidth; body.classList.add('swap-in');
-      $('#pSweep').animate([{ top: '0px', opacity: 1 }, { top: '520px', opacity: .2 }], { duration: 360, easing: 'cubic-bezier(.4,0,.2,1)' });
+      $('#pSweep').animate([{ top: '0px', opacity: 1 }, { top: '394px', opacity: .2 }], { duration: 360, easing: 'cubic-bezier(.4,0,.2,1)' });
     }
   }
   function setActive(mi, animate) {
@@ -431,7 +479,7 @@
   const OUT = 'cubic-bezier(.16,1,.3,1)';
   const SNAP = 'cubic-bezier(.3,.6,.4,1)';
   const OPEN_END = 1950;
-  const Z = { 'L-ring': 10, 'L-holo': 22, 'L-keys': 40 };
+  const Z = { 'L-ring': 10, 'L-holo': 22, 'L-keys': 40, 'L-win': W.z };
   function timeline() {
     const T = [];
     const add = (el, kf, delay, dur, easing) => T.push({ el, kf, delay, dur, easing: easing || 'linear' });
@@ -452,6 +500,9 @@
     add($('#sweep'), [{ top: '430px', opacity: 0 }, { top: '430px', opacity: 1, offset: .1 }, { top: '40px', opacity: .8, offset: .5 }, { top: '780px', opacity: 0 }], 620, 560, 'cubic-bezier(.4,0,.2,1)');
     Object.entries(Z).forEach(([id, z]) => add($('#' + id), [{ translate: '0 0 0px' }, { translate: `0 0 ${z * 1.25}px`, offset: .7 }, { translate: `0 0 ${z}px` }], 700, 560, OUT));
     add(ringSvg, [{ opacity: 0, transform: 'scale(.8) rotate(-30deg)', transformOrigin: '820px 430px' }, { opacity: 1, offset: .3 }, { opacity: 1, transform: 'scale(1) rotate(0deg)', transformOrigin: '820px 430px' }], 820, 680, OUT);
+    // 016 원형 창: 판에서 떠오르며 링이 돌아 들어옴 → 창 유리가 가운데에서 위아래로 열림
+    add($('#wring'), [{ opacity: 0, transform: 'scale(.86) rotate(-24deg)', transformOrigin: `${W.cx}px ${W.cy}px` }, { opacity: 1, offset: .3 }, { opacity: .5, offset: .45 }, { opacity: 1, transform: 'scale(1) rotate(0deg)', transformOrigin: `${W.cx}px ${W.cy}px` }], 640, 620, OUT);
+    add($('#win'), [{ opacity: 0, transform: 'scaleY(.04)' }, { opacity: 1, transform: 'scaleY(.04)', offset: .15 }, { opacity: .8, transform: 'scaleY(1)', offset: .75 }, { opacity: .45, offset: .85 }, { opacity: 1, transform: 'scaleY(1)' }], 760, 440, 'linear');
     [$('#title'), $('#status'), $('#panel'), $('#hints'), $('#clock'), $('#tagL'), $('#tagR'), $('#crew')].forEach((el, i) =>
       add(el, [{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }, { opacity: 1, clipPath: 'inset(0 0 0% 0)' }], 960 + i * 60, 320, 'steps(8, end)'));
     const ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, CLOSE];
@@ -573,7 +624,7 @@
      013: 마우스 쪽이 앞으로 → rotateY(−mx·7°), rotateX(+my·4°). 판 전체는 마우스 쪽으로 8px 따라오고, 배경은 반대로 9px (깊이감).
      층(유리 0 → 버튼 40px)은 #float 회전을 함께 받으므로 앞층일수록 마우스 쪽으로 더 크게 다가옴. */
   const TY = 7, TX = 4;
-  const floatEl = $('#float'), floorEl = $('#floor'), bgEl = $('#bg');
+  const floatEl = $('#float'), floorEl = $('#floor'), bgEl = $('#bg'), winLayer = $('#L-win');
   const tgt = { x: num('mx', 0), y: num('my', 0) }, cur = { x: tgt.x, y: tgt.y };
   addEventListener('pointermove', (e) => {
     if (e.pointerType !== 'mouse') return;
@@ -596,6 +647,8 @@
     floorEl.style.transform = `translate(${(mx * 4).toFixed(2)}px, 0) scaleX(${(1 - by * 0.004).toFixed(4)})`;
     floorEl.style.filter = `brightness(${(1 - by * 0.03).toFixed(3)})`;
     bgEl.style.translate = `${(-mx * 9).toFixed(2)}px ${(-my * 6).toFixed(2)}px`;
+    // 016 원형 창: 판보다 48px 앞 층 + 마우스 쪽으로 6px 더 다가오고 떠다님이 판보다 조금 늦음 → 판과 다른 깊이로 움직임
+    winLayer.style.transform = `translate3d(${(mx * 6).toFixed(2)}px, ${(my * 4 + Math.sin(tt * 0.00105 - 0.6) * 2.5 * on).toFixed(2)}px, 0px)`;
   }
   const grain = $('#grain'), gx = grain.getContext('2d');
   const gimg = gx.createImageData(960, 540);
@@ -638,6 +691,17 @@
     return hits;
   }
   const cv = document.createElement('canvas').getContext('2d');
+  // 016: 변환(기울기·층 이동)을 빼고 평면 좌표로 본 글자 칸 위치 (offset 사슬 + SVG 글자는 getBBox×배율)
+  function rectOfPlane(el) {
+    const chain = (n) => { let x = 0, y = 0; while (n && n.id !== 'L-win' && n.id !== 'L-holo') { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; } return [x, y]; };
+    if (el instanceof SVGElement) {
+      const s = el.ownerSVGElement, [sx, sy] = chain(s.parentElement), vb = s.viewBox.baseVal, k = Math.min(s.clientWidth / vb.width, s.clientHeight / vb.height), b = el.getBBox();
+      const ox = (s.clientWidth - vb.width * k) / 2, oy = (s.clientHeight - vb.height * k) / 2;
+      return { x: sx + ox + (b.x - vb.x) * k, y: sy + oy + (b.y - vb.y) * k, w: b.width * k, h: b.height * k };
+    }
+    const [x, y] = chain(el);
+    return { x, y, w: el.offsetWidth, h: el.offsetHeight };
+  }
   function overflowCheck() {
     const bad = [];
     KEYS.forEach((K, i) => {
@@ -659,6 +723,20 @@
     if (body.scrollHeight > body.offsetHeight + 1 || body.scrollWidth > body.offsetWidth + 1) bad.push(`screen:${MENU[active].id}(${body.scrollWidth}x${body.scrollHeight}/${body.offsetWidth}x${body.offsetHeight})`);
     // 화면 위 홀로그램 줄(제목·상태·안내·시계·구역 이름)이 칸을 넘는지
     ['#title', '#status', '#hints', '#clock', '#tagL', '#tagR', '.scr-head', '.scr-foot', '#crew .cr-head'].forEach((s) => { const e = $(s); if (e.scrollWidth > e.clientWidth + 1) bad.push(`holo:${s}(${e.scrollWidth}>${e.clientWidth})`); });
+    // 016: 원형 창 안 글자 — 모든 글자 칸의 네 모서리가 창 가장자리에서 8px 이상 안쪽인지 + 글자 크기 12px 이상인지
+    $$('#title *, #status *, #panel *, #hints *').forEach((el) => {
+      if (el.closest('svg') && el.tagName !== 'text') return;
+      const t = [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+      if (!t) return;
+      const svgEl = el.tagName === 'text' ? el.ownerSVGElement : null;
+      const k = svgEl ? Math.min(svgEl.clientWidth / svgEl.viewBox.baseVal.width, svgEl.clientHeight / svgEl.viewBox.baseVal.height) : 1;
+      const fs = parseFloat(getComputedStyle(el).fontSize) * k;
+      const r = rectOfPlane(el);
+      if (!r.w || !r.h) return;
+      const worst = Math.min(...[[r.x, r.y], [r.x + r.w, r.y], [r.x, r.y + r.h], [r.x + r.w, r.y + r.h]].map((p) => -winDist(p[0], p[1])));
+      if (worst < 8) bad.push(`win-edge:${(el.textContent || '').trim().slice(0, 8)}(${worst.toFixed(1)})`);
+      if (fs < 12 - 0.01) bad.push(`small:${(el.textContent || '').trim().slice(0, 8)}(${fs.toFixed(1)}px)`);
+    });
     // 원정대 상태 칸: 줄이 칸을 넘거나, 글자가 휜 왼쪽 변·깎인 모서리 밖으로 나가는지
     { const P = new Path2D(CREW.d), box = $('#crew');
       $$('#crew b, #crew small, #crew .cr-bar, #crew .cr-dot').forEach((el) => {
@@ -679,6 +757,28 @@
     const crewGap = Math.min(...[CREW.y, CREW.y + CREW.h].map((y) => CREW.x + CREW.lx(y) - sx(y)));
     return (out.length ? 'OUT ' + out.join(',') : 'inside') + ` crewGap ${crewGap.toFixed(1)} hexR ${Math.round(KEYS[6].x + KEYS[6].w)} hexL ${Math.round(KEYS[4].x)}`;
   }
+  // 016: 원형 창 가장자리와 주변 사이 최소 간격 (평면 좌표, 경로를 1px 간격으로 따라가며 잼)
+  function winGap() {
+    const ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg');
+    svg.style.cssText = 'position:absolute;width:0;height:0;visibility:hidden'; document.body.appendChild(svg);
+    const minOn = (d, ox = 0, oy = 0) => {
+      const p = document.createElementNS(ns, 'path'); p.setAttribute('d', d); svg.appendChild(p);
+      const L = p.getTotalLength(); let m = 1e9, at = null;
+      for (let s = 0; s <= L; s += 1) { const q = p.getPointAtLength(s), v = winDist(q.x + ox, q.y + oy); if (v < m) { m = v; at = [Math.round(q.x + ox), Math.round(q.y + oy)]; } }
+      return { m, at };
+    };
+    const grp = { left: [], right: [], crew: [], clock: [] };
+    KEYS.forEach((K) => grp[K.kind === 'big' ? 'left' : 'right'].push(minOn(K.d, K.x, K.y)));
+    grp.crew.push(minOn(CREW.d, CREW.x, CREW.y));
+    grp.clock.push(minOn('M1301 80 H1549 V190 H1301 Z'));
+    const sil = minOn(SIL);
+    const best = (a) => a.reduce((x, y) => (y.m < x.m ? y : x));
+    const r = Object.entries(grp).map(([k, a]) => { const b = best(a); return `${k} ${b.m.toFixed(1)}@${b.at}`; });
+    const silTop = Math.min(...[...Array(2 * Math.round(W.w) + 1)].map((_, i) => { const x = W.cx - W.w + i; return W.cy - W.h - (x > 586 && x < 1054 ? 22 : 40); }));
+    const silBot = Math.min(...[...Array(2 * Math.round(W.w) + 1)].map((_, i) => { const x = W.cx - W.w + i; return (x > 576 && x < 1064 ? 780 : 768) - (W.cy + W.h); }));
+    svg.remove();
+    return `${r.join(' ')} sil ${sil.m.toFixed(1)}@${sil.at} silTop ${silTop.toFixed(1)} silBot ${silBot.toFixed(1)} D ${2 * W.R} cut ${(W.R - W.h).toFixed(1)}`;
+  }
   function tilt() {
     const c = (id) => { const r = rectOf($(id)); return { x: r.x + r.w / 2, y: r.y + r.h / 2 }; };
     const tl = c('#pTL'), bl = c('#pBL'), tr = c('#pTR'), br = c('#pBR');
@@ -693,6 +793,8 @@
       + ' | ' + tilt()
       + ' | KEYS ' + kb.map((b) => { const r = rectOf(b.querySelector('.kface')); return `${Math.round(r.x)},${Math.round(r.y)},${Math.round(r.w)},${Math.round(r.h)}`; }).join(';')
       + ' | SIL ' + silCheck()
+      + ' | WINGAP ' + winGap()
+      + ' | WIN ' + (() => { const r = rectOf($('#win')), c = rectOf($('#pC')); return `${Math.round(r.x)},${Math.round(r.y)} ${Math.round(r.w)}x${Math.round(r.h)} ratio ${(r.w / r.h).toFixed(3)} winC ${(r.x + r.w / 2).toFixed(1)},${(r.y + r.h / 2).toFixed(1)} plateC ${(c.x + 1).toFixed(1)},${(c.y + 1).toFixed(1)}`; })()
       + ' | OVERFLOW ' + overflowCheck();
     if (Q.get('guard') === '1') FACES.forEach((f) => { const d = document.createElement('div'); d.className = 'guard'; Object.assign(d.style, { left: f.x + 'px', top: f.y + 'px', width: f.w + 'px', height: f.h + 'px' }); stage.appendChild(d); });
   }
