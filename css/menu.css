@@ -418,67 +418,69 @@ body.clean #pad { display: none; }
 #ring .sock { fill: none; stroke: rgba(var(--frame-rgb),.32); stroke-width: 1.2; stroke-dasharray: 4 6; }
 #ring .sock.d { stroke: rgba(var(--frame-rgb),.16); stroke-dasharray: 1 7; }
 
-/* 원 안 배치 (평면 좌표). 원 폭: y=132 → 464px, y=240 → 634px, y=624 → 556px, y=668 → 474px */
-#title { left: 600px; top: 128px; width: 440px; height: 44px; justify-content: center; gap: 12px; }
-#title h1 { font-size: 28px; letter-spacing: 4px; }
-#status { left: 570px; top: 180px; width: 500px; height: 52px; }
-#status .st-i { padding: 3px 0 0 14px; }
+/* 017 원 안 배치 (중심 820,398 반지름 316, 창 y123~673). 원 폭: y=140 → 364px, y=184 → 464px, y=240 → 547px, y=590 → 503px, y=632 → 418px
+   모든 글자 칸의 네 모서리가 창 가장자리에서 8px 이상 안쪽 (allcheck가 확인) */
+#title { left: 650px; top: 138px; width: 340px; height: 38px; justify-content: center; gap: 10px; }
+#title h1 { font-size: 25px; letter-spacing: 3px; }
+#title .t-sub { font-size: 12px; }
+#status { left: 606px; top: 184px; width: 428px; height: 48px; }
+#status .st-i { padding: 2px 0 0 10px; }
 #status .st-i:first-child { border-left: 0; }
-#status .st-k { font-size: 13px; letter-spacing: 1px; }
-#status .st-v { margin-top: 3px; font-size: 16px; }
-#status .st-v b { font-size: 22px; }
-#panel { left: 552px; top: 240px; width: 536px; height: 386px; background: none; border-top: 1px solid rgba(var(--frame-rgb),.4); }
-.scr-head { left: 14px; right: 14px; top: 10px; height: 42px; gap: 10px; }
-.scr-head h2 { font-size: 25px; }
-.scr-code { font-size: 13px; letter-spacing: 1px; }
-.scr-live { font-size: 13px; }
-.scr-body { left: 16px; right: 16px; top: 64px; bottom: 44px; }
-.scr-foot { left: 30px; right: 30px; bottom: 8px; height: 26px; font-size: 13px; }
-#hints { left: 610px; top: 634px; width: 420px; height: 34px; font-size: 14px; }
-#hints .kc { min-width: 24px; height: 22px; font-size: 13px; }
-#hints em { margin: 0 9px 0 2px; }
-/* 메뉴별 내용 — 원 안 504×278에 맞춤, 글자 최소 12px */
-.hdr { font-size: 13px; padding-bottom: 4px; letter-spacing: 0; }
-.sq-grid { grid-template-columns: 146px 1fr 38px 38px 46px; column-gap: 6px; }
-.sq-row { height: 58px; }
-.sq-who { gap: 9px; }
-.port { width: 38px; height: 38px; font-size: 16px; border-radius: 8px; }
-.sq-name { font-size: 17px; }
-.sq-role { font-size: 13px; margin-top: 2px; }
-.hp { gap: 6px; }
-.hp-cells i { width: 8px; height: 14px; }
-.hp b { font-size: 15px; }
+#status .st-k { font-size: 12px; letter-spacing: 0; }
+#status .st-v { margin-top: 2px; font-size: 14px; }
+#status .st-v b { font-size: 19px; }
+#panel { left: 568px; top: 240px; width: 504px; height: 350px; background: none; border-top: 1px solid rgba(var(--frame-rgb),.4); }
+.scr-head { left: 16px; right: 16px; top: 8px; height: 38px; gap: 9px; }
+.scr-head h2 { font-size: 22px; }
+.scr-code { font-size: 12px; letter-spacing: 1px; }
+.scr-live { font-size: 12px; }
+.scr-body { left: 18px; right: 18px; top: 54px; bottom: 38px; }
+.scr-foot { left: 34px; right: 34px; bottom: 6px; height: 24px; font-size: 12px; }
+#hints { left: 640px; top: 598px; width: 360px; height: 30px; font-size: 13px; }
+#hints .kc { min-width: 22px; height: 20px; font-size: 12px; }
+#hints em { margin: 0 7px 0 2px; }
+/* 메뉴별 내용 — 원 안 468×258에 맞춤, 글자 최소 12px. 넘치면 줄 수를 줄인 요약형 */
+.hdr { font-size: 12px; padding-bottom: 3px; letter-spacing: 0; }
+.sq-grid { grid-template-columns: 134px 1fr 34px 34px 42px; column-gap: 5px; }
+.sq-row { height: 52px; }
+.sq-who { gap: 8px; }
+.port { width: 34px; height: 34px; font-size: 15px; border-radius: 7px; }
+.sq-name { font-size: 16px; }
+.sq-role { font-size: 12px; margin-top: 1px; }
+.hp { gap: 5px; }
+.hp-cells i { width: 7px; height: 13px; }
+.hp b { font-size: 14px; }
 .hp b small { font-size: 12px; }
-.st { font-size: 21px; }
-.inv { gap: 8px; }
-.slot { height: 64px; padding: 7px 8px; border-radius: 7px; }
-.slot b { font-size: 14px; line-height: 1.25; }
-.slot span { right: 7px; bottom: 4px; font-size: 16px; }
+.st { font-size: 19px; }
+.inv { gap: 7px; }
+.slot { height: 58px; padding: 6px 7px; border-radius: 7px; }
+.slot b { font-size: 13px; line-height: 1.2; }
+.slot span { right: 6px; bottom: 3px; font-size: 15px; }
 .slot em { font-size: 12px; }
-.weight { margin-top: 12px; font-size: 14px; }
-.mapv svg { height: 256px; }
+.weight { margin-top: 9px; font-size: 13px; }
+.mapv svg { height: 236px; }
 .mapv text { font-size: 18px; }
-.mapv text.c { font-size: 16px; }
-.log li { grid-template-columns: 50px 86px 1fr; gap: 10px; padding: 9px 0; font-size: 15px; }
-.log li time { font-size: 15px; }
-.log li em { font-size: 13px; }
-.list li { grid-template-columns: 56px 1fr; gap: 10px; padding: 10px 0; font-size: 15px; }
-.list li .k { font-size: 14px; }
-.list li em { font-size: 13px; }
-.list.keys li { grid-template-columns: 150px 1fr; padding: 9px 0; }
-.codex { gap: 10px; }
-.codex div { height: 104px; padding: 10px; }
-.codex div b { font-size: 16px; }
-.codex div span { font-size: 13px; }
-.opt { grid-template-columns: 120px 1fr; height: 52px; font-size: 16px; }
-.seg span { padding: 4px 12px; font-size: 14px; }
-.slider .bar { width: 220px; }
-.save p { font-size: 16px; line-height: 1.55; }
-.save .slotcard { margin: 16px 0; padding: 11px 16px; }
-.save .slotcard b { font-size: 17px; }
-.save .slotcard span { font-size: 13px; }
-.save .slotcard time { font-size: 22px; }
-.save .acts span { padding: 11px 0; font-size: 15px; }
+.mapv text.c { font-size: 17px; }
+.log li { grid-template-columns: 46px 80px 1fr; gap: 8px; padding: 7px 0; font-size: 14px; }
+.log li time { font-size: 14px; }
+.log li em { font-size: 12px; }
+.list li { grid-template-columns: 50px 1fr; gap: 9px; padding: 8px 0; font-size: 14px; }
+.list li .k { font-size: 13px; }
+.list li em { font-size: 12px; }
+.list.keys li { grid-template-columns: 136px 1fr; padding: 7px 0; }
+.codex { gap: 8px; }
+.codex div { height: 92px; padding: 8px; }
+.codex div b { font-size: 15px; }
+.codex div span { font-size: 12px; }
+.opt { grid-template-columns: 108px 1fr; height: 46px; font-size: 15px; }
+.seg span { padding: 3px 10px; font-size: 13px; }
+.slider .bar { width: 190px; }
+.save p { font-size: 15px; line-height: 1.5; }
+.save .slotcard { margin: 12px 0; padding: 9px 14px; }
+.save .slotcard b { font-size: 16px; }
+.save .slotcard span { font-size: 12px; }
+.save .slotcard time { font-size: 20px; }
+.save .acts span { padding: 9px 0; font-size: 14px; }
 
 @media (prefers-reduced-motion: reduce) {
   .spin-slow, .spin-rev, .spin-code, .spin-win, #win .w-scan::after, #glass .scanlines::after, .scr-live i, .sig-led, .ck-led i, .mapv .pulse { animation: none !important; }
