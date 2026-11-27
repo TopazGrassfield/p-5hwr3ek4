@@ -1,4 +1,4 @@
-/* UIDiorama 020 — 효과음 (019에서 복사, clack·release를 묵직한 카세트 데크 버튼으로 바꿈, ?clack=A|B|C) (Web Audio API 합성. 외부 음원·라이브러리 없음)
+/* UIDiorama 022 — clack·release를 018 소리로 되돌림 (020 — 효과음 (019에서 복사, clack·release를 묵직한 카세트 데크 버튼으로 바꿈, ?clack=A|B|C) (Web Audio API 합성. 외부 음원·라이브러리 없음)
    같은 합성 함수를 실시간 재생(AudioContext)과 파일 굽기(OfflineAudioContext → WAV)에 함께 씀.
    window.LBSFX.play(name)  /  .unlock()  /  .setMuted(b)  /  .renderWav(names, gap) → base64 WAV
    소리 (길이):
@@ -98,8 +98,25 @@
 
   /* p = 높이 배율(±4%), v = 세기 배율(±10%), r = 난수 */
   const SYN = {
-    clack(ctx, out, t, p, v, r) { clackOf(clackSel)(ctx, out, t, p, v, r); },
-    release(ctx, out, t, p, v, r) { releaseOf(clackSel)(ctx, out, t, p, v, r); },
+    /* 022: 사용자 요청으로 clack·release를 018(020 이전) 소리로 되돌림. 020 묵직한 판은 clackA/B/C로만 남김 */
+    clack(ctx, out, t, p, v, r) {
+      // 1) 플라스틱 버튼 머리가 닿는 딸깍 (밝고 아주 짧음)
+      noise(ctx, out, t, { type: 'bandpass', f: 4300 * p, q: 1.4, peak: 0.8 * v, dec: 0.01, off: r() });
+      noise(ctx, out, t + 0.006, { type: 'highpass', f: 2500 * p, q: 0.7, peak: 0.25 * v, dec: 0.008, off: r() });
+      tone(ctx, out, t, { f: 2950 * p, peak: 0.06 * v, dec: 0.012 });
+      // 2) 28ms 뒤 걸쇠가 걸리며 내려가는 금속성 '척' (잡음을 좁은 필터 여러 개로 울려 금속 판 느낌, 순음은 짧게만)
+      const t2 = t + 0.028 + r() * 0.004;
+      noise(ctx, out, t2, { type: 'bandpass', f: 1400 * p, q: 1.2, peak: 0.55 * v, dec: 0.022, f2: 900 * p, off: r() });
+      [[1780, 9], [2930, 12], [4410, 14], [6150, 16]].forEach(([f, q]) => noise(ctx, out, t2, { type: 'bandpass', f: f * p, q, peak: 0.9 * v, dec: 0.035, off: r() }));
+      tone(ctx, out, t2, { f: 180 * p, f2: 110 * p, peak: 0.1 * v, atk: 0.002, dec: 0.03, glide: 0.03 });
+      // 3) 걸린 뒤 작은 덜컹 (기구 유격)
+      noise(ctx, out, t2 + 0.042 + r() * 0.01, { type: 'bandpass', f: 3100 * p, q: 3, peak: 0.14 * v, dec: 0.008, off: r() });
+    },
+    release(ctx, out, t, p, v, r) {
+      noise(ctx, out, t, { type: 'bandpass', f: 2700 * p, q: 2, peak: 0.22 * v, dec: 0.01, off: r() });
+      tone(ctx, out, t + 0.004, { f: 3150 * p, peak: 0.035 * v, dec: 0.03 });                 // 스프링 울림
+      noise(ctx, out, t + 0.022, { type: 'bandpass', f: 1500 * p, q: 3, peak: 0.08 * v, dec: 0.012, off: r() }); // 되튐
+    },
     clackA: clackOf('A'), clackB: clackOf('B'), clackC: clackOf('C'),
     releaseA: releaseOf('A'), releaseB: releaseOf('B'), releaseC: releaseOf('C'),
     tick(ctx, out, t, p, v) {
