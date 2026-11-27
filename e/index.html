@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>LeftBehind — 포터블 콘솔 시안 011 (EndfieldHUD 배치 + 콘솔 실루엣)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="css/menu.css">
+</head>
+<body class="theme-k1">
+<div id="viewport">
+<div id="stage">
+
+  <!-- 인게임 장면 (메뉴가 열리면 흐림·어둡게) -->
+  <div id="bg"></div>
+  <div id="shade"></div>
+  <canvas id="grain" width="960" height="540"></canvas>
+
+  <!-- 바닥 투영 빛 -->
+  <div id="floor"><i class="beam"></i><i class="pool"></i><i class="refl"></i><i class="pool core"></i></div>
+
+  <!-- 닫힌 상태: 구석의 메뉴 버튼 -->
+  <button id="openBtn" class="hud-btn" aria-label="메뉴 열기"><i class="burger"></i><b>메뉴</b><kbd>Esc</kbd></button>
+
+  <!-- 3D 장면: 떠 있는 콘솔 실루엣 화면 (평면 1640×860) -->
+  <div id="scene3d">
+    <div id="float">
+      <div id="rise">
+        <div id="screen" aria-hidden="true">
+
+          <!-- z 0: 유리 바탕 — 콘솔 실루엣 마스크(가장자리 페이드) -->
+          <div class="z" id="glass" data-glass="glass">
+            <i class="tint"></i><i class="sheen"></i><i class="scanlines"></i><i class="sweep" id="sweep"></i>
+          </div>
+
+          <!-- z 2: 실루엣 윤곽 (아주 옅은 푸른 발광선) -->
+          <svg class="z" id="sil" viewBox="0 0 1640 860" width="1640" height="860">
+            <defs><filter id="silBlur" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+            <path id="silGlow" class="sil-glow" pathLength="1" filter="url(#silBlur)"/>
+            <path id="silLine" class="sil-line" pathLength="1"/>
+            <g id="cutMarks" class="cut-marks"></g>
+          </svg>
+
+          <!-- z 10: 원형 표시창 링 (실루엣 마스크로 위아래가 잘림) -->
+          <div class="z" id="L-ring">
+            <svg id="ring" viewBox="0 0 1640 860" width="1640" height="860">
+              <defs>
+                <path id="codePath" d=""/>
+                <clipPath id="discClip"><circle cx="820" cy="430" r="338"/></clipPath>
+                <radialGradient id="discFill" cx="50%" cy="45%" r="55%">
+                  <stop offset="0" stop-color="rgb(6,18,30)" stop-opacity=".30"/>
+                  <stop offset=".85" stop-color="rgb(4,12,22)" stop-opacity=".46"/>
+                  <stop offset="1" stop-color="rgb(4,12,22)" stop-opacity=".2"/>
+                </radialGradient>
+              </defs>
+              <g id="outerArcs"></g>
+              <circle id="disc" cx="820" cy="430" r="340" fill="url(#discFill)"/>
+              <g id="discGrid" clip-path="url(#discClip)"></g>
+              <circle class="hl" cx="820" cy="430" r="400" stroke-width="1.6" opacity=".45"/>
+              <circle class="hl" cx="820" cy="430" r="340" stroke-width="1.4" opacity=".55"/>
+              <g id="ticks" class="spin-slow"></g>
+              <g class="spin-rev">
+                <circle class="hl" cx="820" cy="430" r="356" stroke-width="1.2" stroke-dasharray="2 9" opacity=".35"/>
+                <circle class="acc-arc" cx="820" cy="430" r="372" stroke-width="5" stroke-dasharray="150 260 40 1888"/>
+              </g>
+              <g class="spin-code"><text class="code-ring"><textPath href="#codePath">원정 일시정지 · 감염 구역 심도 11 · 구조 신호 대기 · 착륙지 연결 유지 · 기록 동기화 0003 · 원정 일시정지 · 감염 구역 심도 11 · 구조 신호 대기 · 착륙지 연결 유지 ·</textPath></text></g>
+              <g id="ringMarks"></g>
+              <g id="readouts"></g>
+            </svg>
+          </div>
+
+          <!-- z 22: 홀로그램 글자 층 -->
+          <div class="z" id="L-holo">
+            <div id="title" data-glass="title">
+              <h1>일시정지</h1>
+              <div class="t-sub">관리기구 휴대 단말 · KG-07</div>
+              <div class="t-warn"><i></i>감염 구역 경보 <b>2단계</b></div>
+            </div>
+            <div id="status" data-glass="status"><i class="c-g"></i><b>3</b>금<i class="c-s"></i><b>4</b>은<i class="c-c"></i><b>5</b>동</div>
+            <div id="clock" data-glass="clock">
+              <div class="ck-top"><span>원정 제12일</span><span class="ck-led"><i></i>전투 차례 멈춤</span></div>
+              <div class="ck-time">14:32<small>:07</small></div>
+              <div class="ck-bot"><span>심도 11 · 방 3</span><span class="ck-bars"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span></div>
+            </div>
+            <section id="scr" data-glass="scr">
+              <header class="scr-head">
+                <span class="scr-no" id="scrNo">03</span>
+                <h2 id="scrTitle">지도</h2>
+                <span class="scr-code" id="scrCode">MAP · 심도 11</span>
+              </header>
+              <div class="scr-body" id="scrBody"></div>
+              <div class="scr-pill" id="scrPill"><i></i>구조 신호 대기</div>
+              <i class="panel-sweep" id="pSweep"></i>
+            </section>
+          </div>
+
+          <!-- z 46: 물리 버튼 층 (왼쪽 손잡이 = 큰 버튼 4 + 대원 카드 + 전원 / 오른쪽 손잡이 = 아이콘 8 + 돌아가기) -->
+          <div class="z" id="L-keys">
+            <nav id="leftKeys" aria-label="주 메뉴"></nav>
+            <nav id="rightKeys" aria-label="기능"></nav>
+          </div>
+
+          <!-- 기기 밖 조작 안내 (참고 원본의 화면 아래 안내 줄 자리) -->
+          <div class="z" id="L-hint">
+            <div id="hints" data-glass="hints">
+              <span class="kc">↑</span><span class="kc">↓</span><span class="kc">←</span><span class="kc">→</span><em>이동</em>
+              <span class="kc w">Enter</span><em>선택</em><span class="kc w">Esc</span><em>닫기</em><span class="kc">1</span><span class="kc">2</span><span class="kc">3</span><em>색</em>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="check" hidden></div>
+</div>
+</div>
+
+<!-- 구석 조작판 (터치·마우스, 렌더 때 숨김) -->
+<div id="pad" role="toolbar" aria-label="시안 조작">
+  <button id="padMenu" class="pad-main">메뉴</button>
+  <button data-theme="k1" title="K1 푸른색 통일">1</button>
+  <button data-theme="k2" title="K2 푸른 선 + 노랑">2</button>
+  <button data-theme="k3" title="K3 푸른 선 + 호박색">3</button>
+  <button id="padMotion" title="움직임 켜기/끄기">움직임</button>
+</div>
+<script src="js/menu.js"></script>
+</body>
+</html>
