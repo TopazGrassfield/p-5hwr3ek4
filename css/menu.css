@@ -1,4 +1,5 @@
-/* UIDiorama 010 — 포터블 콘솔 화면 다듬기: 가운데 배치 + 육각 지그재그 버튼 (009 바탕) */
+/* UIDiorama 012 — 포터블 콘솔: 가운데 화면 + 좌우 육각 버튼 구역 (010 바탕). 콘솔 내부 좌표 1600×760
+   구역: 왼쪽 버튼 0~362 | 화면 362~1238 | 오른쪽 버튼 1238~1600 */
 @font-face { font-family: 'LB Sans'; src: local('Noto Sans KR'), local('NotoSansKR-Regular'), local('Malgun Gothic'); }
 @font-face { font-family: 'LB Num'; src: local('Bahnschrift'); }
 @font-face { font-family: 'LB Code'; src: local('Galmuri11'), local('Galmuri11 Regular'), local('Cascadia Mono'); }
@@ -10,8 +11,8 @@
   --enamel-hi: #f6f8f9; --enamel: #e6eaec; --enamel-lo: #cdd3d6;
   --edge-hi: #a3abb0; --edge-lo: #586166;
   --ink: #14181b; --ink-2: #56606a; --ink-3: #7c858d;
-  /* 기울기 (기본 자세) — 가운데 배치에 맞춰 009(−14°/6°)보다 줄임 */
-  --tiltY: -11deg; --tiltX: 5deg; --tiltZ: -0.8deg;
+  /* 기울기 (기본 자세) — 가로로 긴 콘솔이라 같은 각도에서도 깊이 차가 큼. 원근을 짧게 해 입체감 강화 */
+  --tiltY: -8deg; --tiltX: 4deg; --tiltZ: -0.6deg;
   --screen-scale: .8;
 }
 .theme-k1 { --accent: #49c3ff; --acc-rgb: 73, 195, 255;  --accent-ink: #03121c; }
@@ -36,7 +37,7 @@ kbd { font-family: 'LB Num', sans-serif; }
 #grain { position: absolute; inset: 0; width: 1920px; height: 1080px; pointer-events: none; opacity: 0; mix-blend-mode: overlay; }
 
 /* ---------- 바닥 투영 빛 (화면 가운데 아래) ---------- */
-#floor { position: absolute; left: 420px; top: 700px; width: 1080px; height: 240px; pointer-events: none; opacity: 0; mix-blend-mode: screen; }
+#floor { position: absolute; left: 340px; top: 690px; width: 1240px; height: 240px; pointer-events: none; opacity: 0; mix-blend-mode: screen; }
 #floor .pool { position: absolute; left: 80px; right: 80px; top: 120px; height: 96px; border-radius: 50%;
   background: radial-gradient(closest-side, rgba(var(--frame-rgb),.26), rgba(var(--frame-rgb),.09) 55%, rgba(var(--frame-rgb),0)); }
 #floor .pool.core { left: 300px; right: 300px; top: 150px; height: 34px;
@@ -49,9 +50,9 @@ kbd { font-family: 'LB Num', sans-serif; }
   filter: blur(2px); box-shadow: 0 0 18px 4px rgba(var(--frame-rgb),.18); }
 
 /* ---------- 3D 장면 (화면 중심 = 가로 960px) ---------- */
-#scene3d { position: absolute; inset: 0; perspective: 1200px; perspective-origin: 960px 380px; visibility: hidden; pointer-events: none; }
+#scene3d { position: absolute; inset: 0; perspective: 1050px; perspective-origin: 960px 350px; visibility: hidden; pointer-events: none; }
 #scene3d.on { visibility: visible; }
-#float { position: absolute; left: 360px; top: -30px; width: 1200px; height: 750px; transform-style: preserve-3d; transform-origin: 50% 50%; }
+#float { position: absolute; left: 160px; top: -62px; width: 1600px; height: 760px; transform-style: preserve-3d; transform-origin: 50% 50%; }
 #rise { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: 50% 50%; scale: var(--screen-scale); }
 #screen { position: absolute; inset: 0; transform-style: preserve-3d; transform-origin: 50% 50%;
   transform: rotateY(var(--tiltY)) rotateX(var(--tiltX)) rotateZ(var(--tiltZ)); }
@@ -64,13 +65,20 @@ kbd { font-family: 'LB Num', sans-serif; }
 #L-keys  { translate: 0 0 46px; }
 
 /* ---------- z 0: 유리 바탕 ---------- */
-#glass { border-radius: 20px; overflow: hidden; transform-style: flat; transform-origin: 50% 50%;
+#glass { transform-style: flat; transform-origin: 50% 50%; }
+/* 콘솔 윤곽(손잡이 쪽 둥글게 넓어짐)으로 자른 유리. 경로는 #frame .flow 와 같음 */
+#glass .gshape { position: absolute; inset: 0; overflow: hidden;
+  clip-path: path("M300 20 H1300 C1360 20 1380 0 1450 0 H1520 A80 80 0 0 1 1600 80 V680 A80 80 0 0 1 1520 760 H1450 C1380 760 1360 740 1300 740 H300 C240 740 220 760 150 760 H80 A80 80 0 0 1 0 680 V80 A80 80 0 0 1 80 0 H150 C220 0 240 20 300 20 Z");
   background:
     linear-gradient(162deg, rgba(var(--frame-rgb),.10), rgba(var(--frame-rgb),.025) 38%, rgba(var(--frame-rgb),.05) 100%),
     linear-gradient(180deg, rgba(5,14,24,.26) 0%, rgba(5,14,24,.22) 60%, rgba(5,14,24,.12) 100%);
   backdrop-filter: blur(2px) brightness(.92);
   -webkit-backdrop-filter: blur(2px) brightness(.92);
-  box-shadow: inset 0 0 80px rgba(var(--frame-rgb),.11), inset 0 0 0 1px rgba(var(--frame-rgb),.10); }
+  box-shadow: inset 0 0 80px rgba(var(--frame-rgb),.11); }
+/* 가운데 화면 구역: 조금 더 어두운 유리 + 안쪽 발광 (버튼 구역과 구분) */
+#glass .scr-glass { position: absolute; left: 362px; top: 40px; width: 876px; height: 680px; border-radius: 16px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(2,9,16,.30), rgba(2,9,16,.22) 70%, rgba(2,9,16,.14));
+  box-shadow: inset 0 0 46px rgba(var(--frame-rgb),.12); }
 #glass .sheen { position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(112deg, transparent 18%, rgba(255,255,255,.045) 24%, transparent 31%, transparent 62%, rgba(255,255,255,.03) 66%, transparent 70%); }
 #glass .scanlines { position: absolute; inset: 0; pointer-events: none;
@@ -78,7 +86,7 @@ kbd { font-family: 'LB Num', sans-serif; }
 #glass .scanlines::after { content: ''; position: absolute; left: 0; right: 0; height: 110px; top: -110px;
   background: linear-gradient(180deg, transparent, rgba(var(--frame-rgb),.05) 70%, rgba(var(--frame-rgb),.10) 98%, transparent);
   animation: roll 8s linear infinite; }
-@keyframes roll { to { transform: translateY(980px); } }
+@keyframes roll { to { transform: translateY(990px); } }
 #glass .sweep { position: absolute; left: 0; right: 0; top: 0; height: 2px; opacity: 0; pointer-events: none;
   background: rgba(var(--frame-rgb),1); box-shadow: 0 0 22px 5px rgba(var(--frame-rgb),.55); }
 
@@ -88,6 +96,9 @@ kbd { font-family: 'LB Num', sans-serif; }
 #frame .edges-glow .edge { stroke: rgba(var(--frame-rgb),.55); stroke-width: 5; opacity: .45; }
 #frame .bk { stroke: rgba(var(--frame-rgb),1); stroke-width: 2.6; stroke-linecap: round; filter: drop-shadow(0 0 4px rgba(var(--frame-rgb),.9)) drop-shadow(0 0 12px rgba(var(--frame-rgb),.45)); }
 #frame .marks path { stroke: rgba(var(--frame-rgb),.95); stroke-width: 2.6; stroke-linecap: round; filter: drop-shadow(0 0 4px rgba(var(--frame-rgb),.8)); }
+#frame .sline { fill: none; stroke: rgba(var(--frame-rgb),.32); stroke-width: 1.1; stroke-dasharray: 1 1; stroke-dashoffset: 0;
+  filter: drop-shadow(0 0 3px rgba(var(--frame-rgb),.45)); }
+#frame .sbk path { stroke: rgba(var(--frame-rgb),.75); stroke-width: 1.8; stroke-linecap: round; filter: drop-shadow(0 0 3px rgba(var(--frame-rgb),.7)); }
 #frame .flabel { font: 600 13px 'LB Sans'; letter-spacing: 3px; fill: rgba(var(--frame-rgb),.95); dominant-baseline: middle; }
 #frame .flow { stroke: #e9f8ff; stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: .07 .93; stroke-dashoffset: 0; opacity: .9;
   filter: drop-shadow(0 0 3px rgba(var(--frame-rgb),1)) drop-shadow(0 0 10px rgba(var(--frame-rgb),.7));
@@ -95,7 +106,7 @@ kbd { font-family: 'LB Num', sans-serif; }
 @keyframes flowRun { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 
 /* ---------- z 10: 링 + 벌집 바탕 ---------- */
-#ringWrap { position: absolute; left: 661px; top: 133px; width: 520px; height: 520px; pointer-events: none; opacity: .75; }
+#ringWrap { position: absolute; left: 520px; top: 110px; width: 560px; height: 560px; pointer-events: none; opacity: .4; }
 #ring { position: absolute; inset: 0; overflow: visible; }
 #ring .hl { fill: none; stroke: rgba(var(--frame-rgb),1); }
 #ring .acc-arc { fill: none; stroke: var(--accent); filter: drop-shadow(0 0 4px rgba(var(--acc-rgb),.7)); }
@@ -119,7 +130,7 @@ kbd { font-family: 'LB Num', sans-serif; }
 
 /* ---------- z 22: 홀로그램 글자 ---------- */
 #L-holo { color: var(--holo); text-shadow: 0 0 9px rgba(var(--frame-rgb),.35), 0 1px 2px rgba(0,0,0,.85); }
-#status { position: absolute; left: 398px; top: 26px; width: 770px; height: 72px; display: flex; align-items: stretch; }
+#status { position: absolute; left: 398px; top: 56px; width: 804px; height: 64px; display: flex; align-items: stretch; }
 .st-i { flex: 1 1 auto; padding: 6px 0 0 18px; border-left: 1px solid rgba(var(--frame-rgb),.28); white-space: nowrap; }
 .st-k { display: block; font: 700 14px 'LB Sans'; letter-spacing: 2px; opacity: .65; }
 .st-v { display: flex; align-items: baseline; gap: 6px; margin-top: 5px; font: 500 17px 'LB Sans'; }
@@ -132,7 +143,7 @@ kbd { font-family: 'LB Num', sans-serif; }
 .sig-led { width: 10px; height: 10px; border-radius: 50%; align-self: center; background: var(--accent); box-shadow: 0 0 10px 2px rgba(var(--acc-rgb),.7); animation: blink 2.4s steps(1) infinite; }
 @keyframes blink { 0%, 70% { opacity: 1; } 71%, 100% { opacity: .25; } }
 
-#panel { position: absolute; left: 40px; top: 118px; width: 600px; height: 532px;
+#panel { position: absolute; left: 398px; top: 128px; width: 804px; height: 524px;
   background: linear-gradient(180deg, rgba(3,10,18,.32), rgba(3,10,18,.18) 62%, rgba(3,10,18,.06));
   border-top: 1px solid rgba(var(--frame-rgb),.4); overflow: hidden; }
 .scr-head { position: absolute; left: 22px; right: 22px; top: 16px; height: 48px; display: flex; align-items: baseline; gap: 14px;
@@ -215,7 +226,7 @@ kbd { font-family: 'LB Num', sans-serif; }
 .save .acts span { flex: 1; text-align: center; padding: 13px 0; border: 1px solid rgba(var(--frame-rgb),.45); border-radius: 8px; font: 700 16px 'LB Sans'; }
 .save .acts span.warn { border-color: var(--accent); color: var(--accent); }
 
-#hints { position: absolute; left: 404px; top: 683px; height: 40px; display: flex; align-items: center; gap: 6px; font: 500 15px 'LB Sans'; white-space: nowrap; }
+#hints { position: absolute; left: 398px; top: 662px; width: 804px; height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px; font: 500 15px 'LB Sans'; white-space: nowrap; }
 #hints .kc { min-width: 26px; height: 24px; padding: 0 6px; display: grid; place-items: center; font: 600 14px 'LB Num'; border: 1px solid rgba(var(--holo-rgb),.6); border-radius: 5px; }
 #hints em { font-style: normal; margin: 0 12px 0 2px; opacity: .9; }
 #hints .h-sep { width: 1px; height: 22px; background: rgba(var(--frame-rgb),.35); margin: 0 6px 0 0; }
@@ -239,11 +250,11 @@ kbd { font-family: 'LB Num', sans-serif; }
 .pb.pressed > .edge { box-shadow: 0 1px 2px rgba(0,0,0,.4); transition-duration: .07s; }
 .pb.pressed > .sock { background: rgba(var(--acc-rgb),.16); box-shadow: 0 0 0 2px rgba(var(--acc-rgb),1), 0 0 22px 5px rgba(var(--acc-rgb),.6); transition-duration: .05s; }
 
-#titlePlate { position: absolute; left: 32px; top: 24px; width: 340px; height: 70px; }
+#titlePlate { position: absolute; left: 36px; top: 46px; width: 290px; height: 66px; }
 .tp-face { display: block; }
-.tp-led { position: absolute; left: 16px; top: 16px; width: 6px; height: 38px; border-radius: 3px; background: var(--accent); box-shadow: 0 0 10px rgba(var(--acc-rgb),.7); }
-#titlePlate h1 { position: absolute; left: 36px; top: 13px; font: 800 36px/1 'LB Sans'; letter-spacing: 4px; color: var(--ink); }
-.tp-sub { position: absolute; right: 18px; top: 14px; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.tp-led { position: absolute; left: 16px; top: 15px; width: 6px; height: 36px; border-radius: 3px; background: var(--accent); box-shadow: 0 0 10px rgba(var(--acc-rgb),.7); }
+#titlePlate h1 { position: absolute; left: 34px; top: 14px; font: 800 33px/1 'LB Sans'; letter-spacing: 3px; color: var(--ink); }
+.tp-sub { position: absolute; right: 16px; top: 13px; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .tp-sub b { font: 700 14px 'LB Sans'; color: var(--ink-2); }
 .tp-sub span { font: 600 13px 'LB Num'; color: var(--ink-3); letter-spacing: 2px; }
 
@@ -251,20 +262,33 @@ kbd { font-family: 'LB Num', sans-serif; }
 .mini-face { display: flex; align-items: center; gap: 10px; padding: 0 16px; }
 .mini-face b { font: 700 18px 'LB Sans'; color: var(--ink); letter-spacing: 1px; }
 .mini-face kbd { margin-left: auto; font: 600 13px 'LB Num'; color: var(--ink-2); border: 1px solid var(--ink-3); padding: 1px 6px; border-radius: 4px; }
-#closeBtn { left: 1004px; top: 680px; }
+#closeBtn { left: 1337px; top: 56px; }
+
+/* 좌우 구역 이름 + 단말 전력 (z 22 홀로그램 글자) */
+.zone-tag { position: absolute; top: 596px; width: 362px; left: 0; display: flex; align-items: center; justify-content: center; gap: 10px;
+  font: 700 15px 'LB Sans'; letter-spacing: 3px; opacity: .85; white-space: nowrap; }
+.zone-tag.r { left: 1238px; }
+.zone-tag i { width: 46px; height: 1px; background: linear-gradient(90deg, transparent, rgba(var(--frame-rgb),.9)); }
+.zone-tag.r i { background: linear-gradient(90deg, rgba(var(--frame-rgb),.9), transparent); }
+.zone-tag b { font: 600 13px 'LB Num'; letter-spacing: 0; padding: 0 5px; border: 1px solid rgba(var(--holo-rgb),.55); border-radius: 4px; }
+#power { position: absolute; left: 1238px; top: 638px; width: 362px; display: flex; align-items: center; justify-content: center; gap: 10px; font: 500 14px 'LB Sans'; white-space: nowrap; opacity: .85; }
+#power .pw-cells { display: flex; gap: 3px; }
+#power .pw-cells i { width: 12px; height: 8px; border-radius: 2px; background: rgba(var(--holo-rgb),.16); }
+#power .pw-cells i.on { background: var(--holo); box-shadow: 0 0 5px rgba(var(--frame-rgb),.6); }
+#power b { font: 600 16px 'LB Num'; }
 
 /* ---------- z 46: 육각 물리 버튼 (벌집 지그재그) ----------
    .hw  = 자리(등장 동작용)      .hx = 상태(떠오름·밀림·눌림, CSS 변수)
    .hshadow 바닥 그림자 / .hsock 소켓 발광 윤곽 / .hedge 두께 / .hface 면 (모두 둥근 육각 clip-path, JS가 path 지정)  */
 #hexes { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none !important; }
-.hw { position: absolute; width: 180px; height: 166px; transform-style: preserve-3d; pointer-events: none; }
-.hx { position: absolute; left: 0; top: 0; width: 180px; height: 166px; --d: 10px; --sink: 0px; outline: none; pointer-events: none;
+.hw { position: absolute; width: 156px; height: 146px; transform-style: preserve-3d; pointer-events: none; }
+.hx { position: absolute; left: 0; top: 0; width: 156px; height: 146px; --d: 10px; --sink: 0px; outline: none; pointer-events: none;
   transform: translate3d(var(--px, 0px), var(--py, 0px), calc(var(--lz, 0px) - var(--pz, 0px))) scale(var(--ls, 1));
   transition: transform .34s cubic-bezier(.3,1.45,.5,1); }
-.hx > * { position: absolute; left: 0; top: 0; width: 180px; height: 156px; }
+.hx > * { position: absolute; left: 0; top: 0; width: 156px; height: 136px; }
 .hshadow { top: 14px !important; filter: blur(9px); opacity: .75; transition: opacity .2s, transform .25s; }
 .hshadow i { position: absolute; inset: 0; background: rgba(0,0,0,.85); }
-.hsock { left: -8px !important; top: -8px !important; width: 196px !important; height: 182px !important; overflow: visible; }
+.hsock { left: -8px !important; top: -8px !important; width: 172px !important; height: 162px !important; overflow: visible; }
 .hsock path { fill: none; stroke: rgba(var(--frame-rgb),.45); stroke-width: 1.2; filter: drop-shadow(0 0 4px rgba(var(--frame-rgb),.55)); transition: stroke .2s; }
 .hedge { top: var(--d) !important; background: linear-gradient(180deg, var(--edge-hi), var(--edge-lo) 70%); }
 .hface { pointer-events: auto; cursor: pointer;
@@ -276,15 +300,15 @@ kbd { font-family: 'LB Num', sans-serif; }
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding-top: 2px; }
 .hface::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .5; mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .08 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
-.hline { position: absolute; inset: 0; width: 180px; height: 156px; overflow: visible; pointer-events: none; }
+.hline { position: absolute; inset: 0; width: 156px; height: 136px; overflow: visible; pointer-events: none; }
 .hline path { fill: none; stroke: rgba(20,30,36,.13); stroke-width: 1.2; }
 .hline path.hi { stroke: rgba(255,255,255,.9); stroke-width: 1.4; clip-path: inset(0 0 60% 0); }
-.h-no { font: 600 14px 'LB Num'; color: var(--ink-3); height: 19px; min-width: 30px; padding: 0 6px; display: grid; place-items: center; border-radius: 4px; letter-spacing: 1px; transition: background .2s, color .2s; }
-.h-ic { width: 32px; height: 32px; color: var(--ink); }
-.h-ic svg { width: 32px; height: 32px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.h-nm { font: 700 21px/1.15 'LB Sans'; color: var(--ink); letter-spacing: .5px; white-space: nowrap; margin-top: 2px; }
-.h-sub { font: 600 15px/1.1 'LB Sans'; color: var(--ink-2); white-space: nowrap; }
-.h-led { position: absolute; left: 50%; bottom: 9px; width: 22px; height: 3px; margin-left: -11px; border-radius: 2px; background: #a4abaf; box-shadow: inset 0 1px 1px rgba(0,0,0,.35); }
+.h-no { font: 600 13px 'LB Num'; color: var(--ink-3); height: 18px; min-width: 28px; padding: 0 6px; display: grid; place-items: center; border-radius: 4px; letter-spacing: 1px; transition: background .2s, color .2s; }
+.h-ic { width: 28px; height: 28px; color: var(--ink); }
+.h-ic svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.h-nm { font: 700 19px/1.15 'LB Sans'; color: var(--ink); letter-spacing: .3px; white-space: nowrap; margin-top: 1px; }
+.h-sub { font: 600 13px/1.1 'LB Sans'; color: var(--ink-2); white-space: nowrap; }
+.h-led { position: absolute; left: 50%; bottom: 8px; width: 22px; height: 3px; margin-left: -11px; border-radius: 2px; background: #a4abaf; box-shadow: inset 0 1px 1px rgba(0,0,0,.35); }
 
 /* 호버: 8px 떠오름, 윤곽 밝아짐 */
 .hx.hot { --lz: 8px; }

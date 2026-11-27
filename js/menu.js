@@ -1,4 +1,4 @@
-/* UIDiorama 010 — 포터블 콘솔 화면: 가운데 배치 + 육각 지그재그 버튼 (009 바탕)
+/* UIDiorama 012 — 포터블 콘솔: 가운데 화면 + 좌우 육각 버튼 구역 (010 바탕)
    주소 옵션 (렌더·캡처용):
      ?theme=k1|k2|k3   내부 강조색          ?clean=1   구석 조작판 숨김
      ?still=1          쉬는 움직임·시차 끔 (정지 캡처)
@@ -102,22 +102,23 @@
     },
   };
 
-  /* ---------- 벌집 배치 (화면 좌표 1200×750) ----------
-     납작 육각(위아래가 평평) 180×156, 간격 12px. 열 간격 = (H+g)·cos30°, 가운데 열은 반 칸 내려 지그재그.
-       열0    열1    열2
-       01            03        ← 01·02·03 이 위로 지그재그
-              02
-       04            06        ← 04·05·06 이 아래로 지그재그
-              05                                                   */
-  const HX = { W: 180, H: 156, g: 16, x0: 676, y0: 180, r: 13 };
+  /* ---------- 좌우 벌집 배치 (콘솔 좌표 1600×760) ----------
+     납작 육각(위아래가 평평) 156×136, 간격 14px. 구역마다 2열 지그재그: 바깥 열 2개 + 안쪽 열 1개(반 칸 내려감) → 화면을 향한 V자.
+       왼쪽 구역 (0~362)        화면 (362~1238)        오른쪽 구역 (1238~1600)
+       01                                                           04
+             02    ←→  ............................  ←→     05
+       03                                                           06          */
+  const HX = { W: 156, H: 136, g: 14, y0: 160, r: 12 };
   const DY = HX.H + HX.g, DX = DY * Math.sqrt(3) / 2;
-  const cen = (c, rr) => ({ x: HX.x0 + HX.W / 2 + c * DX, y: HX.y0 + HX.H / 2 + rr * DY });
-  const POS = [{ c: 0, rr: 0 }, { c: 1, rr: 0.5 }, { c: 2, rr: 0 }, { c: 0, rr: 1 }, { c: 1, rr: 1.5 }, { c: 2, rr: 1 }];
-  const CEN = POS.map((p) => cen(p.c, p.rr));
+  const ZONE = { L: 181, R: 1419 }; // 구역 가운데 x
+  // side: -1 왼쪽, +1 오른쪽 / inner: 0 바깥 열, 1 안쪽 열(화면 쪽)
+  const cen = (side, inner, rr) => ({ x: (side < 0 ? ZONE.L : ZONE.R) + side * (inner - 0.5) * -DX, y: HX.y0 + HX.H / 2 + rr * DY });
+  const POS = [[-1, 0, 0], [-1, 1, 0.5], [-1, 0, 1], [1, 0, 0], [1, 1, 0.5], [1, 0, 1]];
+  const CEN = POS.map((p) => cen(...p));
   const DECOR = [ // 빈 자리 장식 육각 (크기 배율, dim = 점선)
-    { c: 1, rr: -0.5, s: 0.5 }, { c: 1, rr: 2.5, s: 0.42, dim: 1 }, { c: 0, rr: 2, s: 0.55 }, { c: 2, rr: 2, s: 0.42, dim: 1 },
-    { c: 2.6, rr: 1.65, s: 0.3, dim: 1 },
-  ];
+    [-1, 1, -0.5, 0.46], [-1, 1, 1.5, 0.5, 1], [-1, 0, 2, 0.34, 1],
+    [1, 1, -0.5, 0.46], [1, 1, 1.5, 0.5, 1], [1, 0, 2, 0.34, 1],
+  ].map((d) => ({ ...cen(d[0], d[1], d[2]), s: d[3], dim: d[4] }));
   function rhex(w, h, r, ox = 0, oy = 0) {
     const V = [[0.25 * w, 0], [0.75 * w, 0], [w, h / 2], [0.75 * w, h], [0.25 * w, h], [0, h / 2]].map((p) => [p[0] + ox, p[1] + oy]);
     let d = '';
@@ -142,10 +143,10 @@
     w.style.top = (c.y - HX.H / 2) + 'px';
     w.innerHTML = `<button class="hx" data-i="${i}" data-panel="hex-${m.id}" tabindex="-1" aria-label="${m.ko}">
       <span class="hshadow"><i></i></span>
-      <svg class="hsock" viewBox="-8 -8 196 182"><path d="${rhex(HX.W + 12, HX.H + 16, HX.r + 4, -6, -6)}"/></svg>
+      <svg class="hsock" viewBox="-8 -8 172 162"><path d="${rhex(HX.W + 12, HX.H + 16, HX.r + 4, -6, -6)}"/></svg>
       <span class="hedge"></span>
       <span class="hface">
-        <svg class="hline" viewBox="0 0 180 156"><path d="${rhex(HX.W - 14, HX.H - 12, 9, 7, 6)}"/><path class="hi" d="${rhex(HX.W - 3, HX.H - 3, HX.r - 1, 1.5, 1.5)}"/></svg>
+        <svg class="hline" viewBox="0 0 156 136"><path d="${rhex(HX.W - 14, HX.H - 12, 9, 7, 6)}"/><path class="hi" d="${rhex(HX.W - 3, HX.H - 3, HX.r - 1, 1.5, 1.5)}"/></svg>
         <span class="h-no">${m.no}</span>
         <span class="h-ic"><svg viewBox="0 0 24 24">${ICON[m.id]}</svg></span>
         <b class="h-nm">${m.ko}</b>
@@ -161,20 +162,23 @@
   const net = $('#hexNet');
   const mk = (tag, attrs) => { const e = document.createElementNS(NS, tag); Object.entries(attrs).forEach(([k, v]) => e.setAttribute(k, v)); net.appendChild(e); return e; };
   const slots = CEN.map((c) => mk('path', { class: 'slot', d: rhex(HX.W + 8, HX.H + 8, HX.r + 3, c.x - HX.W / 2 - 4, c.y - HX.H / 2 - 4 + 5) }));
-  DECOR.forEach((d) => {
-    const c = cen(d.c, d.rr), w = HX.W * d.s, h = HX.H * d.s;
-    mk('path', { class: 'decor' + (d.dim ? ' dim' : ''), d: rhex(w, h, 6 * d.s + 2, c.x - w / 2, c.y - h / 2) });
+  DECOR.forEach((c) => {
+    const w = HX.W * c.s, h = HX.H * c.s;
+    mk('path', { class: 'decor' + (c.dim ? ' dim' : ''), d: rhex(w, h, 6 * c.s + 2, c.x - w / 2, c.y - h / 2) });
   });
-  [[0, 1, 3], [1, 2, 5], [1, 3, 4], [1, 4, 5]].forEach((t) => {
+  [[0, 1, 2], [3, 4, 5]].forEach((t) => {
     const x = (CEN[t[0]].x + CEN[t[1]].x + CEN[t[2]].x) / 3, y = (CEN[t[0]].y + CEN[t[1]].y + CEN[t[2]].y) / 3;
     mk('circle', { class: 'node', cx: x.toFixed(1), cy: (y + 5).toFixed(1), r: 2.6 });
   });
   const link = mk('path', { class: 'link', d: '' });
   const linkEnd = mk('circle', { class: 'link-end', r: 3.5, cx: 0, cy: 0 });
+  /* 선택 육각 ↔ 화면 구역 경계: 육각 안쪽 꼭짓점에서 화면 가장자리까지 짧은 꺾은 선 */
   function linkTo(i) {
-    const c = CEN[i];
-    const ex = c.x - HX.W / 2 - 6, ey = c.y + 5;
-    const d = `M640 150 H654 L${(ex - 14).toFixed(1)} ${ey.toFixed(1)} H${ex.toFixed(1)}`;
+    const c = CEN[i], side = POS[i][0];
+    const ex = c.x - side * (HX.W / 2 + 6), ey = c.y + 5;  // 육각의 화면 쪽 꼭짓점 바로 바깥
+    const sx = side < 0 ? 362 : 1238, sy = 390;            // 화면 구역 경계 가운데
+    const mx = sx - side * 10;
+    const d = `M${sx} ${sy} H${mx} L${(ex - side * 12).toFixed(1)} ${ey.toFixed(1)} H${ex.toFixed(1)}`;
     link.style.d = `path("${d}")`;
     linkEnd.setAttribute('cx', ex.toFixed(1)); linkEnd.setAttribute('cy', ey.toFixed(1));
   }
@@ -205,11 +209,11 @@
     document.body.classList.remove('theme-k1', 'theme-k2', 'theme-k3');
     document.body.classList.add('theme-' + t);
     $$('#pad [data-theme]').forEach((b) => b.classList.toggle('on', b.dataset.theme === t));
-    try { localStorage.setItem('lb010-theme', t); } catch (e) { /* file:// */ }
+    try { localStorage.setItem('lb012-theme', t); } catch (e) { /* file:// */ }
     if (flick && motion && isOpen) $('#L-holo').animate([{ opacity: 1 }, { opacity: .35 }, { opacity: 1 }, { opacity: .7 }, { opacity: 1 }], { duration: 280, easing: 'steps(4)' });
   }
   let theme = Q.get('theme');
-  if (!theme) { try { theme = localStorage.getItem('lb010-theme'); } catch (e) { /* */ } }
+  if (!theme) { try { theme = localStorage.getItem('lb012-theme'); } catch (e) { /* */ } }
   if (!/^k[123]$/.test(theme || '')) theme = 'k1';
   setTheme(theme, false);
   if (Q.get('clean') === '1') document.body.classList.add('clean');
@@ -226,7 +230,7 @@
     body.innerHTML = SCREENS[m.id]();
     if (animate && motion) {
       body.classList.remove('swap-in'); void body.offsetWidth; body.classList.add('swap-in');
-      $('#pSweep').animate([{ top: '0px', opacity: 1 }, { top: '548px', opacity: .2 }], { duration: 360, easing: 'cubic-bezier(.4,0,.2,1)' });
+      $('#pSweep').animate([{ top: '0px', opacity: 1 }, { top: '524px', opacity: .2 }], { duration: 360, easing: 'cubic-bezier(.4,0,.2,1)' });
     }
   }
   const PUSH = 7; // 선택 육각의 이웃을 바깥으로 미는 거리(px)
@@ -262,12 +266,12 @@
 
   /* ---------- 등장 / 닫힘 ----------
      ① 선 그리기 0~620ms ② 떠오름 0~1080ms ③ 펼침 640~1160ms
-     ④ 버튼 들어옴 900~1800ms: 육각이 대각 지그재그 순(01→04→02→03→05→06)으로 앞에서 꽂혀 철컥, 이어서 장식 육각    */
+     ④ 버튼 들어옴 900~1800ms: 육각이 화면 쪽 → 바깥, 위 → 아래 지그재그 순(02→05→01→04→03→06)으로 앞에서 꽂혀 철컥, 이어서 장식 육각    */
   const OUT = 'cubic-bezier(.16,1,.3,1)';
   const SNAP = 'cubic-bezier(.3,.6,.4,1)';
   const OPEN_END = 1800;
   const Z = { 'L-ring': 10, 'L-holo': 22, 'L-keys': 46 };
-  const ORDER = CEN.map((c, i) => [c.x + c.y * 1.4, i]).sort((a, b) => a[0] - b[0]).map((a) => a[1]);
+  const ORDER = POS.map((p, i) => [(1 - p[1]) * 10 + p[2] * 2 + (p[0] > 0 ? 1 : 0), i]).sort((a, b) => a[0] - b[0]).map((a) => a[1]);
   function timeline() {
     const T = [];
     const add = (el, kf, delay, dur, easing) => T.push({ el, kf, delay, dur, easing: easing || 'linear' });
@@ -278,6 +282,8 @@
     $$('#frame .edges .edge, #frame .edges-glow .edge').forEach((el) => add(el, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], 160, 460, 'cubic-bezier(.5,0,.2,1)'));
     add($('#frame .marks'), [{ opacity: 0 }, { opacity: 1 }], 520, 160, 'steps(4, end)');
     add($('#frame .flabel'), [{ opacity: 0 }, { opacity: 1 }], 560, 200, 'steps(5, end)');
+    add($('#frame .sline'), [{ strokeDasharray: '0 1', opacity: 0 }, { strokeDasharray: '1 0', opacity: 1 }], 600, 420, 'cubic-bezier(.5,0,.2,1)');
+    add($('#frame .sbk'), [{ opacity: 0 }, { opacity: 1, offset: .4 }, { opacity: .3, offset: .6 }, { opacity: 1 }], 700, 220, 'steps(5, end)');
     add($('#flow'), [{ opacity: 0 }, { opacity: 0.9 }], 640, 300, 'ease-out');
     add($('#rise'), [
       { transform: 'translate3d(0, 120px, -260px) rotateX(24deg) scale(.9)', opacity: 0 },
@@ -291,7 +297,7 @@
       { clipPath: 'inset(49.6% 0 49.6% 0 round 20px)', opacity: 0 }, { clipPath: 'inset(49.6% 0 49.6% 0 round 20px)', opacity: 1, offset: .2 },
       { clipPath: 'inset(0% 0 0% 0 round 20px)', opacity: .9, offset: .62 }, { opacity: .4, offset: .7 },
       { opacity: 1, offset: .78 }, { opacity: .7, offset: .86 }, { clipPath: 'inset(0% 0 0% 0 round 20px)', opacity: 1 }], 640, 520, 'linear');
-    add($('#sweep'), [{ top: '375px', opacity: 0 }, { top: '375px', opacity: 1, offset: .1 }, { top: '0px', opacity: .8, offset: .5 }, { top: '750px', opacity: 0 }], 700, 560, 'cubic-bezier(.4,0,.2,1)');
+    add($('#sweep'), [{ top: '380px', opacity: 0 }, { top: '380px', opacity: 1, offset: .1 }, { top: '0px', opacity: .8, offset: .5 }, { top: '760px', opacity: 0 }], 700, 560, 'cubic-bezier(.4,0,.2,1)');
     Object.entries(Z).forEach(([id, z]) => add($('#' + id), [{ translate: '0 0 0px' }, { translate: `0 0 ${z * 1.25}px`, offset: .7 }, { translate: `0 0 ${z}px` }], 760, 560, OUT));
     add($('#ring'), [{ opacity: 0, transform: 'scale(.82) rotate(-40deg)' }, { opacity: 1, offset: .3 }, { opacity: 1, transform: 'scale(1) rotate(0deg)' }], 820, 880, OUT);
     $$('#hexNet .slot').forEach((el) => add(el, [{ opacity: 0 }, { opacity: 1, offset: .4 }, { opacity: .3, offset: .6 }, { opacity: 1 }], 820, 260, 'steps(5, end)'));
@@ -305,7 +311,7 @@
     $$('#hexNet .node, #hexNet .link-end').forEach((el, k) => add(el, [{ opacity: 0 }, { opacity: 1 }], 1450 + k * 30, 120, 'steps(3, end)'));
     add(link, [{ strokeDashoffset: 1, opacity: 1 }, { strokeDashoffset: 0, opacity: 1 }], 1420, 300, OUT);
     add($('#closeBtn'), [{ transform: 'translate3d(0,60px,100px)', opacity: 0 }, { opacity: 1, offset: .3 }, { transform: 'translate3d(0,-6px,-6px)', offset: .62 }, { transform: 'none', opacity: 1 }], 1240, 460, SNAP);
-    [$('#status'), $('.scr-head'), $('#scrBody'), $('.scr-foot'), $('#hints')].forEach((el, i) =>
+    [$('#status'), $('.scr-head'), $('#scrBody'), $('.scr-foot'), $('#hints'), $('#tagL'), $('#tagR'), $('#power')].forEach((el, i) =>
       add(el, [{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }, { opacity: 1, clipPath: 'inset(0 0 0% 0)' }], 1000 + i * 70, 320, 'steps(8, end)'));
     add($('#panel'), [{ opacity: 0 }, { opacity: 1 }], 980, 200, 'steps(4, end)');
     return T;
@@ -411,7 +417,7 @@
   syncMotionBtn();
 
   /* ---------- 떠 있음 + 마우스 시차 ----------
-     기본 자세 #screen CSS (rotateY −10°, rotateX 5°, rotateZ −0.8°).
+     기본 자세 #screen CSS (rotateY −8°, rotateX 4°, rotateZ −0.6°).
      #float 에 흔들림(위아래 ±5px, 회전 ±0.6°)과 마우스 기울기(Y ±4°, X ±2.5°)를 더한다.          */
   const floatEl = $('#float'), floorEl = $('#floor'), bgEl = $('#bg');
   const tgt = { x: num('mx', 0), y: num('my', 0) }, cur = { x: tgt.x, y: tgt.y };
