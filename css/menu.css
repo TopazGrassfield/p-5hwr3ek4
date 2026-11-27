@@ -119,6 +119,9 @@ kbd { font-family: 'LB Num', sans-serif; }
 #ring .wire.on { stroke: rgba(var(--acc-rgb),.95); stroke-width: 1.8; filter: drop-shadow(0 0 4px rgba(var(--acc-rgb),.8)); }
 #ring .wnode { fill: rgba(var(--frame-rgb),.8); }
 #ring .wnode.on { fill: var(--accent); filter: drop-shadow(0 0 4px rgba(var(--acc-rgb),1)); }
+#ring .hdecor { fill: rgba(var(--frame-rgb),.04); stroke: rgba(var(--frame-rgb),.42); stroke-width: 1.2; }
+#ring .hdecor.dim { fill: none; stroke: rgba(var(--frame-rgb),.3); stroke-dasharray: 3 4; }
+#ring .hnode { fill: rgba(var(--frame-rgb),.75); }
 .spin-slow { transform-origin: 820px 430px; animation: spin 140s linear infinite; }
 .spin-rev  { transform-origin: 820px 430px; animation: spin 90s linear infinite reverse; }
 .spin-code { transform-origin: 820px 430px; animation: spin 240s linear infinite; }
@@ -255,7 +258,8 @@ kbd { font-family: 'LB Num', sans-serif; }
 .zone-tag b { font: 600 13px 'LB Num'; letter-spacing: 0; padding: 0 5px; border: 1px solid rgba(var(--holo-rgb),.55); border-radius: 4px; }
 
 /* 오른쪽 구역 위 시계·상태 (011) */
-#clock { position: absolute; left: 1318px; top: 84px; width: 248px; height: 106px; padding: 9px 14px;
+#clock { position: absolute; left: 1337px; top: 80px; width: 248px; height: 110px; padding: 9px 14px 13px;
+  clip-path: polygon(0 0, 100% 0, 100% 72%, calc(100% - 18px) 100%, 18px 100%, 0 72%); /* 아래 모서리를 육각 빗변(60°)처럼 깎음 */
   background: rgba(3,10,18,.38); border: 1px solid rgba(var(--frame-rgb),.32); border-left: 4px solid var(--accent); }
 #clock .ck-top, #clock .ck-bot { display: flex; justify-content: space-between; align-items: center; font: 600 13px 'LB Sans'; white-space: nowrap; }
 #clock .ck-top span:first-child { background: var(--accent); color: var(--accent-ink); padding: 0 6px; text-shadow: none; border-radius: 2px; }
@@ -273,7 +277,7 @@ kbd { font-family: 'LB Num', sans-serif; }
 #leftKeys, #rightKeys { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none !important; }
 .kw { position: absolute; transform-style: preserve-3d; pointer-events: none; }
 .kb { position: absolute; left: 0; top: 0; --d: 10px; --sink: 0px; outline: none; pointer-events: none;
-  transform: translate3d(0, 0, calc(var(--lz, 0px) - var(--pz, 0px))) scale(var(--ls, 1));
+  transform: translate3d(var(--px, 0px), var(--py, 0px), calc(var(--lz, 0px) - var(--pz, 0px))) scale(var(--ls, 1));
   transition: transform .34s cubic-bezier(.3,1.45,.5,1); }
 .kb > * { position: absolute; left: 0; top: 0; width: 100%; }
 .kshadow { top: 14px !important; filter: blur(9px); opacity: .72; transition: opacity .2s, transform .25s; }
@@ -303,14 +307,14 @@ kbd { font-family: 'LB Num', sans-serif; }
 .big .k-no { position: absolute; top: 9px; font: 600 13px 'LB Num'; color: var(--ink-3); height: 18px; min-width: 26px; padding: 0 5px; display: grid; place-items: center; border-radius: 3px; letter-spacing: 1px; }
 .big .k-led { position: absolute; top: 50%; width: 4px; height: 30px; margin-top: -15px; border-radius: 2px; background: #a4abaf; box-shadow: inset 0 1px 1px rgba(0,0,0,.35); }
 
-/* 오른쪽 정사각 아이콘 버튼 (2열) */
-.sq .kface { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding-top: 2px; }
-.sq .k-ic { width: 32px; height: 32px; color: var(--ink); }
-.sq .k-ic svg { width: 32px; height: 32px; stroke-width: 1.8; }
-.sq .k-nm { font: 700 16px/1.1 'LB Sans'; color: var(--ink); white-space: nowrap; }
-.sq .k-no { position: absolute; left: 10px; top: 8px; font: 600 12px 'LB Num'; color: var(--ink-3); padding: 0 4px; border-radius: 3px; }
-.sq .k-badge { position: absolute; right: 12px; top: 10px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; font: 700 13px/20px 'LB Num'; text-align: center; background: var(--accent); color: var(--accent-ink); }
-.sq .k-led { position: absolute; left: 50%; bottom: 8px; width: 20px; height: 3px; margin-left: -10px; border-radius: 2px; background: #a4abaf; box-shadow: inset 0 1px 1px rgba(0,0,0,.35); }
+/* 오른쪽 육각 버튼 (벌집 지그재그, 납작 육각 112×97) — 글자는 가운데 넓은 띠에 모음 */
+.sq .kface { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; padding-top: 24px; }
+.sq .k-ic { width: 26px; height: 26px; color: var(--ink); flex: none; }
+.sq .k-ic svg { width: 26px; height: 26px; stroke-width: 1.8; }
+.sq .k-nm { font: 700 14px/1.15 'LB Sans'; color: var(--ink); white-space: nowrap; letter-spacing: -.2px; }
+.sq .k-no { position: absolute; left: 50%; top: 6px; transform: translateX(-50%); font: 600 12px/14px 'LB Num'; color: var(--ink-3); padding: 0 4px; border-radius: 3px; }
+.sq .k-badge { position: absolute; left: 66px; top: 16px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; font: 700 12px/20px 'LB Num'; text-align: center; background: var(--accent); color: var(--accent-ink); }
+.sq .k-led { position: absolute; left: 50%; bottom: 8px; width: 18px; height: 3px; margin-left: -9px; border-radius: 2px; background: #a4abaf; box-shadow: inset 0 1px 1px rgba(0,0,0,.35); }
 
 /* 대원 카드 (왼쪽 구역 아래, 누르면 대원 전환) */
 .card .kface { padding: 11px 8px 0 12px; }
@@ -327,10 +331,12 @@ kbd { font-family: 'LB Num', sans-serif; }
 .card .c-id { font: 600 12px 'LB Num'; color: var(--ink-3); letter-spacing: 1px; margin-top: 4px; white-space: nowrap; }
 .card .c-nav { position: absolute; right: 10px; bottom: 11px; font: 700 13px 'LB Sans'; color: var(--ink-2); white-space: nowrap; }
 
-/* 돌아가기 (오른쪽 구역 아래) */
-.closek .kface { display: flex; align-items: center; justify-content: center; gap: 12px; }
-.closek .kface b { font: 700 19px 'LB Sans'; color: var(--ink); letter-spacing: 1px; }
-.closek .kface kbd { font: 600 13px 'LB Num'; color: var(--ink-2); border: 1px solid var(--ink-3); padding: 1px 6px; border-radius: 4px; }
+/* 돌아가기 (벌집 맨 아래 육각 — 묶음이 아래로 좁아지는 끝) */
+.closek .kface { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 2px; padding-top: 16px; }
+.closek .k-ic { width: 22px; height: 22px; color: var(--ink); }
+.closek .k-ic svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.closek .kface b { font: 700 15px/1.2 'LB Sans'; color: var(--ink); letter-spacing: 1px; white-space: nowrap; }
+.closek .kface kbd { font: 600 12px/14px 'LB Num'; color: var(--ink-2); border: 1px solid var(--ink-3); padding: 0 6px; border-radius: 4px; margin-top: 2px; }
 
 /* 상태: 호버 = 8px 떠오름 / 선택 = 18px 앞으로 + 번호·LED 점등 / 눌림 = 면이 두께만큼 들어감 */
 .kb.hot { --lz: 8px; }

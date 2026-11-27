@@ -162,14 +162,37 @@
   const KEYS = [];
   const BH = 90, BG = 12, BY0 = 100;
   for (let k = 0; k < 4; k++) { const yt = BY0 + k * (BH + BG); KEYS.push(Object.assign({ kind: 'big', menu: k }, sector(yt, yt + BH))); }
-  const SW = 116, SH = 100, SG = 12, SY0 = 214;
-  for (let k = 0; k < 6; k++) {
-    const row = k >> 1, col = k & 1, yt = SY0 + row * (SH + SG);
-    const x0 = rx(yt + SH / 2) + 4;
-    KEYS.push({ kind: 'sq', menu: 4 + k, x: x0 + col * (SW + SG), y: yt, w: SW, h: SH, d: rectPath(SW, SH, 14, 6) });
+  /* 오른쪽: 납작 육각(위아래 평평) 벌집. 010의 육각 그리기를 가져옴.
+       열0   열1   열2
+       04          06      ← 위 줄 3칸이 W자로 엇갈림 (위가 넓음)
+             05
+       07          09
+             08
+             11            ← 돌아가기 육각 하나로 아래가 좁아짐 (손잡이 쪽으로 모임)
+     열 간격 DX = (H+g)·cos30°, 가운데 열은 반 칸 아래. */
+  function rhex(w, h, r, ox = 0, oy = 0) {
+    const V = [[0.25 * w, 0], [0.75 * w, 0], [w, h / 2], [0.75 * w, h], [0.25 * w, h], [0, h / 2]].map((p) => [p[0] + ox, p[1] + oy]);
+    let d = '';
+    V.forEach((p, i) => {
+      const a = V[(i + 5) % 6], b = V[(i + 1) % 6];
+      const ua = [a[0] - p[0], a[1] - p[1]], ub = [b[0] - p[0], b[1] - p[1]];
+      const la = Math.hypot(...ua), lb = Math.hypot(...ub);
+      const p1 = [p[0] + ua[0] / la * r, p[1] + ua[1] / la * r], p2 = [p[0] + ub[0] / lb * r, p[1] + ub[1] / lb * r];
+      d += `${i ? 'L' : 'M'}${f1(p1[0])} ${f1(p1[1])} Q${f1(p[0])} ${f1(p[1])} ${f1(p2[0])} ${f1(p2[1])} `;
+    });
+    return d + 'Z';
   }
+  const HX = { W: 112, H: 97, g: 10, x0: 1312, y0: 212, r: 10 };
+  const HDY = HX.H + HX.g, HDX = HDY * Math.sqrt(3) / 2;
+  const hcen = (c, rr) => ({ x: HX.x0 + HX.W / 2 + c * HDX, y: HX.y0 + HX.H / 2 + rr * HDY });
+  const HPOS = [{ c: 0, rr: 0 }, { c: 1, rr: 0.5 }, { c: 2, rr: 0 }, { c: 0, rr: 1 }, { c: 1, rr: 1.5 }, { c: 2, rr: 1 }];
+  const HEXD = rhex(HX.W, HX.H, HX.r);
+  HPOS.forEach((p, k) => {
+    const c = hcen(p.c, p.rr);
+    KEYS.push({ kind: 'sq', hex: p, menu: 4 + k, x: c.x - HX.W / 2, y: c.y - HX.H / 2, w: HX.W, h: HX.H, d: HEXD });
+  });
   KEYS.push({ kind: 'card', x: 16, y: 556, w: 132, h: 150, d: rectPathL(132, 150, 16, 8) }); // 폭 132: 마우스 오른쪽 위 끝(판이 오른쪽으로 기울 때)에도 오팔 얼굴에 닿지 않게
-  KEYS.push({ kind: 'closek', x: 1330, y: 576, w: 228, h: 56, d: rectPath(228, 56, 12, 6) });
+  { const c = hcen(1, 2.5); KEYS.push({ kind: 'closek', hex: { c: 1, rr: 2.5 }, x: c.x - HX.W / 2, y: c.y - HX.H / 2, w: HX.W, h: HX.H, d: HEXD }); }
   const CARD = KEYS.length - 2, CLOSE = KEYS.length - 1;
 
   const holder = { big: $('#leftKeys'), card: $('#leftKeys'), sq: $('#rightKeys'), closek: $('#rightKeys') };
@@ -193,7 +216,7 @@
       const m = MENU[K.menu];
       inner = `<span class="k-no">${m.no}</span><span class="k-ic"><svg viewBox="0 0 24 24">${ICON[m.id]}</svg></span><b class="k-nm">${m.ko}</b>${m.badge ? `<span class="k-badge">${m.badge}</span>` : ''}<i class="k-led"></i>`;
     } else if (K.kind === 'card') inner = cardHTML();
-    else inner = '<b>돌아가기</b><kbd>Esc</kbd>';
+    else inner = '<span class="k-ic"><svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5"/><path d="M4 12h10a6 6 0 0 1 6 6"/></svg></span><b>돌아가기</b><kbd>Esc</kbd>';
     const sx = (K.w + 10) / K.w, sy = (K.h + 12) / K.h;
     w.innerHTML = `<button class="kb ${K.kind}" data-i="${i}" data-panel="key-${K.kind}-${i}" tabindex="-1" aria-label="${K.menu != null ? MENU[K.menu].ko : (K.kind === 'card' ? '대원 카드' : '돌아가기')}" style="width:${f1(K.w)}px;height:${f1(K.h + 10)}px">
       <span class="kshadow" style="height:${f1(K.h)}px"><i></i></span>
@@ -222,18 +245,28 @@
     mk(ticks, 'line', { class: long ? 'tick l' : 'tick', x1: f1(C.x + Math.cos(a) * r1), y1: f1(C.y + Math.sin(a) * r1), x2: f1(C.x + Math.cos(a) * r2), y2: f1(C.y + Math.sin(a) * r2) });
   }
   $('#codePath').setAttribute('d', `M${C.x - 346} ${C.y} a346 346 0 1 1 692 0 a346 346 0 1 1 -692 0`);
-  // 버튼 → 화면 가장자리 전선 (왼쪽 큰 버튼 4 + 오른쪽 안쪽 열 3)
+  // 버튼 → 화면 가장자리 전선 (왼쪽 큰 버튼 4 + 오른쪽 안쪽 열 육각 2)
   const wires = [];
+  const hrow = (mi) => (mi >= 4 && mi <= 9 ? (HPOS[mi - 4].rr < 1 ? 0 : 1) : -1);
   KEYS.forEach((K, i) => {
-    if (K.kind !== 'big' && !(K.kind === 'sq' && (K.menu - 4) % 2 === 0)) return;
+    if (K.kind !== 'big' && !(K.kind === 'sq' && K.hex.c === 0)) return;
     const y0 = K.cy;
     const x0 = K.kind === 'big' ? xi(y0) + 4 : K.x - 4;
     const x1 = K.kind === 'big' ? 432 : 1208;
-    const y1 = 190 + (K.kind === 'big' ? K.menu : (K.menu - 4) / 2 + 4) * 52;
+    const y1 = 190 + (K.kind === 'big' ? K.menu : hrow(K.menu) * 2 + 4) * 52;
     const xm = (x0 + x1) / 2;
     const p = mk(ringSvg, 'path', { class: 'wire', d: `M${f1(x0)} ${f1(y0)} H${f1(xm)} L${f1(x1 + (K.kind === 'big' ? -10 : 10))} ${f1(y1)} H${f1(x1)}` });
     const n = mk(ringSvg, 'circle', { class: 'wnode', cx: f1(x1), cy: f1(y1), r: 3 });
-    wires.push({ i, p, n, row: K.kind === 'sq' ? (K.menu - 4) >> 1 : -1 });
+    wires.push({ i, p, n, row: K.kind === 'sq' ? hrow(K.menu) : -1 });
+  });
+  // 벌집 바탕: 빈 자리 장식 육각(실선·점선) + 세 육각이 만나는 꼭짓점 노드 → 벌집 결을 완성
+  [{ c: 0, rr: 2, s: 0.5 }, { c: 2, rr: 2, s: 0.5 }, { c: 0, rr: 2.75, s: 0.3, dim: 1 }, { c: 2, rr: 2.75, s: 0.3, dim: 1 }, { c: 1, rr: 3.3, s: 0.26, dim: 1 }].forEach((d) => {
+    const c = hcen(d.c, d.rr), w = HX.W * d.s, h = HX.H * d.s;
+    mk(ringSvg, 'path', { class: 'hdecor' + (d.dim ? ' dim' : ''), d: rhex(w, h, 4, c.x - w / 2, c.y - h / 2) });
+  });
+  [[0, 1, 3], [1, 2, 5], [1, 3, 4], [1, 4, 5]].forEach((t) => {
+    const P = t.map((k) => hcen(HPOS[k].c, HPOS[k].rr));
+    mk(ringSvg, 'circle', { class: 'hnode', cx: f1((P[0].x + P[1].x + P[2].x) / 3), cy: f1((P[0].y + P[1].y + P[2].y) / 3 + 5), r: 2.6 });
   });
 
   /* ---------- 콘솔 실루엣: 3단계 선 (far 먼 선 / mid 중간 선 / near 가까운 짧은 강조) ----------
@@ -348,8 +381,18 @@
     KEYS.forEach((K) => K.el.classList.toggle('active', K.menu === mi));
     wires.forEach((w) => {
       const K = KEYS[w.i];
-      const on = K.menu === mi || (w.row >= 0 && mi >= 4 && (mi - 4) >> 1 === w.row);
+      const on = K.menu === mi || (w.row >= 0 && hrow(mi) === w.row);
       w.p.classList.toggle('on', on); w.n.classList.toggle('on', on);
+    });
+    // 선택 육각의 이웃 육각을 바깥으로 6px 밀어냄 (010 방식)
+    const A = KEYS.find((K) => K.hex && K.menu === mi);
+    KEYS.forEach((K) => {
+      let px = 0, py = 0;
+      if (A && K.hex && K !== A) {
+        const dx = K.cx - A.cx, dy = K.cy - A.cy, L = Math.hypot(dx, dy);
+        if (L < HDY * 1.2) { px = dx / L * 6; py = dy / L * 6; }
+      }
+      K.el.style.setProperty('--px', f1(px) + 'px'); K.el.style.setProperty('--py', f1(py) + 'px');
     });
     showScreen(mi, animate);
   }
@@ -409,6 +452,7 @@
       (left ? 1100 : 1180) + kk * (left ? 80 : 50), 480, SNAP);
     });
     wires.forEach((w, k) => [w.p, w.n].forEach((el) => add(el, [{ opacity: 0 }, { opacity: 1, offset: .5 }, { opacity: .3, offset: .7 }, { opacity: 1 }], 1500 + k * 30, 200, 'steps(5, end)')));
+    $$('#ring .hdecor, #ring .hnode').forEach((el, k) => add(el, [{ opacity: 0 }, { opacity: 1, offset: .5 }, { opacity: .3, offset: .7 }, { opacity: 1 }], 1560 + k * 40, 200, 'steps(5, end)'));
     return T;
   }
   let anims = [];
