@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>LeftBehind — 포터블 콘솔 화면 시안 009</title>
+<title>LeftBehind — 포터블 콘솔 화면 시안 010 (가운데 배치 + 육각 버튼)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="css/menu.css">
 </head>
@@ -63,30 +63,25 @@
             <path id="flow" class="flow" pathLength="1" d="M20 0 H1180 A20 20 0 0 1 1200 20 V730 A20 20 0 0 1 1180 750 H20 A20 20 0 0 1 0 730 V20 A20 20 0 0 1 20 0 Z"/>
           </svg>
 
-          <!-- z 10: 계기판 링 -->
+          <!-- z 10: 계기판 링 + 벌집 바탕(빈 자리 장식 육각·소켓 윤곽·연결선) -->
           <div class="z" id="L-ring">
             <div id="ringWrap">
-              <svg id="ring" viewBox="0 0 900 900" width="560" height="560">
+              <svg id="ring" viewBox="0 0 900 900" width="520" height="520">
                 <defs>
                   <path id="codePath" d="M450,450 m-372,0 a372,372 0 1,1 744,0 a372,372 0 1,1 -744,0"/>
                 </defs>
-                <circle class="hl" cx="450" cy="450" r="436" stroke-width="1.4" opacity=".4"/>
+                <circle class="hl" cx="450" cy="450" r="436" stroke-width="1.4" opacity=".35"/>
                 <g id="ticks" class="spin-slow"></g>
                 <g class="spin-rev">
                   <circle class="acc-arc" cx="450" cy="450" r="421" stroke-width="4" stroke-dasharray="120 540 46 1940"/>
-                  <circle class="hl" cx="450" cy="450" r="421" stroke-width="1.4" stroke-dasharray="2 10" opacity=".35"/>
+                  <circle class="hl" cx="450" cy="450" r="421" stroke-width="1.4" stroke-dasharray="2 10" opacity=".3"/>
                 </g>
                 <g class="spin-code">
                   <text class="code-ring"><textPath href="#codePath">원정 일시정지 · 심도 11.2 KM · 구조 신호 대기 · 착륙지 연결 유지 · 기록 동기화 0003 · 원정 일시정지 · 심도 11.2 KM · 구조 신호 대기 ·</textPath></text>
                 </g>
-                <circle class="hl ringflow" cx="450" cy="450" r="342" stroke-width="1.4" stroke-dasharray="1 7" opacity=".5"/>
               </svg>
             </div>
-            <div id="depthGauge">
-              <div class="dg-title">심도 <b>KM</b></div>
-              <div class="dg-scale" id="dgScale"></div>
-              <div class="dg-mark" style="--v:11.2"><span>11.2</span></div>
-            </div>
+            <svg id="hexNet" viewBox="0 0 1200 750" width="1200" height="750"></svg>
           </div>
 
           <!-- z 22: 홀로그램 글자 층 -->
@@ -109,10 +104,10 @@
               <i class="panel-sweep" id="pSweep"></i>
             </section>
             <div id="hints" data-glass="hints">
-              <span class="kc">↑</span><span class="kc">↓</span><em>이동</em>
+              <span class="kc">↑</span><span class="kc">↓</span><span class="kc">←</span><span class="kc">→</span><em>이동</em>
               <span class="kc w">Enter</span><em>선택</em>
               <span class="kc w">Esc</span><em>닫기</em>
-              <span class="h-sep"></span><span class="h-note">전투 차례는 멈춰 있습니다</span>
+              <span class="h-sep"></span><span class="h-note">전투 차례 멈춤</span>
             </div>
           </div>
 
@@ -126,7 +121,7 @@
                 <span class="tp-sub"><b>원정 중 호출</b><span>KG-07</span></span>
               </span>
             </div>
-            <nav id="nav" aria-label="메뉴"></nav>
+            <nav id="hexes" aria-label="메뉴"></nav>
             <button id="closeBtn" class="pb mini" data-panel="close" aria-label="메뉴 닫기">
               <span class="sock"></span><span class="edge"></span>
               <span class="face mini-face"><b>돌아가기</b><kbd>Esc</kbd></span>
