@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>LeftBehind — 전투 HUD 시안 001</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- UIDiorama HUD 001 — 메뉴 시안 022의 색·발광 선·유리 판·물리 버튼·소리를 이어받은 전투 HUD.
+     평면 좌표 1920×1080. 화면 가운데 50%×50%(x 480~1440, y 270~810)는 비움.
+     효과음 js/sfx.js = 022 사본(철컥·뗌은 018 소리). 수치 출처는 generation.md. -->
+<link rel="stylesheet" href="css/hud.css?v=h001">
+</head>
+<body class="theme-k1">
+<div id="viewport">
+  <div id="stage">
+    <div id="bg"></div>
+    <div id="shade"></div>
+
+    <!-- 대상 지시선 (기울기 층 밖 — 전투 화면에 고정) -->
+    <svg id="leader" viewBox="0 0 1920 1080" aria-hidden="true">
+      <polyline id="ldLine" points="" />
+      <circle id="ldDot" r="4" />
+      <g id="reticle">
+        <circle class="r-out" r="34" />
+        <circle class="r-in" r="22" />
+        <path class="r-tick" d="M -44 0 H -30 M 30 0 H 44 M 0 -44 V -30 M 0 30 V 44" />
+      </g>
+    </svg>
+
+    <!-- 주사위·명중 결과 (잠깐 뜨는 홀로그램) -->
+    <div id="roll" aria-live="polite"></div>
+
+    <!-- HUD 기울기 층 -->
+    <div id="hud">
+      <!-- 왼쪽 위: 턴 -->
+      <section id="turnBox" class="gp fl1">
+        <div class="tb-lbl">턴</div>
+        <div class="tb-no" id="turnNo">02</div>
+        <div class="tb-side">
+          <div class="tb-phase" id="phase">메인 페이즈</div>
+          <div class="tb-sub">1턴 = 5초 · 민첩 순서</div>
+        </div>
+      </section>
+
+      <!-- 위 가운데: 턴 순서 띠 -->
+      <section id="order" class="gp fl2">
+        <div class="od-hd">행동 순서</div>
+        <ol id="orderList"></ol>
+      </section>
+
+      <!-- 오른쪽 위: 방 정보 + 미니맵 -->
+      <section id="map" class="gp fl3">
+        <div class="mp-hd"><span class="mp-tag">B-2</span><span class="mp-nm">기둥 방</span><span class="mp-st">교전 중</span></div>
+        <svg id="mm" viewBox="0 0 296 150" aria-hidden="true"></svg>
+      </section>
+
+      <!-- 구석 조작판 -->
+      <section id="pad" class="fl3">
+        <button class="pb" id="pbMenu" title="메뉴 (Esc)"><b>메뉴</b><kbd>Esc</kbd></button>
+        <button class="pb" id="pbSound" title="소리 (M)"><b id="sndTx">소리 켬</b><kbd>M</kbd></button>
+        <div class="pb-th">
+          <button class="pt" data-th="k1" title="테마 K1 (Shift+1)">K1</button>
+          <button class="pt" data-th="k2" title="테마 K2 (Shift+2)">K2</button>
+          <button class="pt" data-th="k3" title="테마 K3 (Shift+3)">K3</button>
+        </div>
+      </section>
+
+      <!-- 오른쪽: 적 정보 판 -->
+      <section id="enemy" class="gp fl2">
+        <div class="en-hd">
+          <span class="en-tg">적</span><b id="enName">갈고리 짐승 A</b><kbd>Tab</kbd>
+        </div>
+        <div class="en-tags" id="enTags"></div>
+        <div class="en-hp"><span>체력</span><div class="bar" id="enHpBar"></div><em id="enHp">8/8</em></div>
+        <div class="en-stats" id="enStats"></div>
+        <div class="en-weak"><span class="lb">약점</span><span id="enWeak"></span></div>
+        <div class="en-hit">
+          <div class="eh-hd"><span id="ehWho">오팔 · 굴절 광선</span><span id="ehRange">거리 11m / 사거리 16m</span></div>
+          <div class="eh-main">
+            <div class="eh-big"><b id="ehTh">3+</b><span>성공 기준선</span></div>
+            <div class="eh-calc">
+              <div id="ehLine1">명중 5 − 민첩 3 = +2</div>
+              <div id="ehLine2">주사위 1개 성공 67% · 타수 4</div>
+              <div id="ehLine3">피해 위력 5 − 견고함 3 = 2 · 치명 +2</div>
+              <div id="ehLine4">방어 수 2 · 장갑 6+</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 왼쪽: 현재 대원 상세 -->
+      <section id="detail" class="gp fl1">
+        <div class="dt-hd"><span class="dt-tg">행동 중</span><b id="dtName">오팔</b></div>
+        <div class="dt-rows" id="dtRows"></div>
+      </section>
+
+      <!-- 아래 왼쪽: 대원 4명 -->
+      <section id="crew"></section>
+
+      <!-- 아래 가운데~오른쪽: 행동 선택 (토큰 종류별 묶음) -->
+      <section id="acts">
+        <div class="ag" id="agTac">
+          <div class="ag-hd"><span class="ag-nm">전술행동</span><span class="coins" id="coinTac"></span></div>
+          <div class="ag-row" id="rowTac"></div>
+        </div>
+        <div class="ag" id="agAct">
+          <div class="ag-hd"><span class="ag-nm">행동</span><span class="coins" id="coinAct"></span></div>
+          <div class="ag-row" id="rowAct"></div>
+        </div>
+      </section>
+
+      <!-- 오른쪽 아래: 차례 종료 (행동 버튼과 분리) -->
+      <section id="endWrap"></section>
+
+      <div id="keyhint">←→↑↓ 고르기 · Enter 누르기 · 1~4 대원 · Tab 적 · Space 차례 종료 · Shift+1·2·3 테마 · M 소리</div>
+    </div>
+  </div>
+</div>
+<script src="js/sfx.js?v=h001"></script>
+<script src="js/hud.js?v=h001"></script>
+</body>
+</html>
