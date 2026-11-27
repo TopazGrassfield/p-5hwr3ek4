@@ -216,40 +216,50 @@
      (015~017: 138×132, 왼쪽 변 = 버튼 바깥 호와 같은 중심의 호, 얼굴을 피하려고 작게 둠)
   /* 018: 빈자리(버튼 아래 12px ~ 실루엣선 10px 안쪽, 오른쪽 끝 = 버튼 안쪽 호 끝 x322) = x46 y508 276×269 (중심 184,642.5).
      칸 = 가로·세로 각 89% → 246×239, 같은 중심 → x61 y523 (면적 79.6%). 왼쪽 변은 직선(빈자리 왼쪽이 실루엣 직선 구간), 모서리 깎기. */
-  const GAP = { x: 46, y: 508, w: 276, h: 269 };
-  const CREW = { w: 246, h: 239 };
-  CREW.x = Math.round(GAP.x + (GAP.w - CREW.w) / 2); CREW.y = Math.round(GAP.y + (GAP.h - CREW.h) / 2);
+  /* 019: 왼쪽 아래 칸 = 미니맵. 모양 = 사용자 손그림 영역(ref_user_minimap_area.png)을 평면 좌표로 옮겨 다듬은 둥근 판.
+     손그림 판독(평면): 왼쪽 x73~75, 위 y≈540, 오른쪽 위 둥근 꺾임 후 오른쪽 변이 x400→478로 비스듬히 내려감(y545→690),
+     아래 오른쪽 y707 수평(x456→300) → 손잡이 곡선 따라 왼쪽 아래로(x190,y780) → 둥글게 왼쪽 변으로.
+     칸 상자 = x76 y540 404×238. 어떤 메뉴에서든 내용은 미니맵만 (018의 NO SIGNAL·상태 요약 뺌). */
+  const AREA = { x: 73, y: 528, w: 407, h: 252 }; // 손그림 빨간 선 바깥 상자 (평면, 판독값)
+  const CREW = { x: 76, y: 540, w: 404, h: 238 };
   {
-    const { w, h } = CREW;
-    CREW.d = `M0 0 H${w - 14} L${w} 14 V${h} H18 L0 ${h - 18} Z`;
+    const { x: X, y: Y, w, h } = CREW;
+    const P = (a) => a.map((v, i) => (i % 2 ? v - Y : v - X)).join(' ');
+    CREW.d = `M${P([76, 556])} Q${P([76, 540, 92, 540])} L${P([378, 540])} C${P([404, 540, 422, 552, 434, 574])} L${P([472, 652])} `
+      + `C${P([478, 664, 480, 676, 480, 688])} C${P([480, 700, 472, 708, 460, 708])} L${P([322, 708])} C${P([298, 708, 280, 714, 262, 728])} `
+      + `C${P([232, 752, 204, 778, 160, 778])} C${P([112, 778, 78, 748, 76, 700])} Z`;
     CREW.lx = () => 0;
     const el = $('#crew');
-    Object.assign(el.style, { left: CREW.x + 'px', top: CREW.y + 'px', width: w + 'px', height: h + 'px', clipPath: `path("${CREW.d}")` });
+    Object.assign(el.style, { left: X + 'px', top: Y + 'px', width: w + 'px', height: h + 'px', clipPath: `path("${CREW.d}")` });
     el.querySelector('svg').setAttribute('viewBox', `0 0 ${w} ${h}`);
     $('#crewPath').setAttribute('d', CREW.d);
-    $('#crewRows').innerHTML = SQUAD.map((m) => {
-      const hurt = m.hp / m.max <= 0.5;
-      return `<li class="cr-row${hurt ? ' hurt' : ''}"><i class="cr-dot${hurt ? ' hurt' : ''}" title="${hurt ? '부상' : '정상'}"></i><b>${m.n}</b><span class="cr-bar"><i style="width:${Math.round(m.hp / m.max * 100)}%"></i></span><small>${m.hp}/${m.max}</small></li>`;
-    }).join('');
-  }
-  /* 018: 원정대 메뉴를 보는 동안 왼쪽 상태 칸 = NO SIGNAL (같은 정보가 가운데 창에 나오므로) */
-  const nsCv = $('#crewNoise'), nsCtx = nsCv.getContext('2d');
-  nsCv.width = Math.round(CREW.w / 2); nsCv.height = Math.round(CREW.h / 2);
-  function drawNoise() {
-    const img = nsCtx.createImageData(nsCv.width, nsCv.height), d = img.data;
-    for (let i = 0; i < d.length; i += 4) { const v = Math.random() * 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = Math.random() < 0.5 ? 70 : 20; }
-    nsCtx.putImageData(img, 0, 0);
-  }
-  drawNoise();
-  let nosig = null, nsTimer = 0;
-  function setNoSignal(on, animate) {
-    if (nosig === on) return;
-    const first = nosig === null; nosig = on;
-    const el = $('#crew');
-    clearTimeout(nsTimer);
-    if (!animate || first || !motion) { el.classList.toggle('nosig', on); el.classList.remove('glitch'); return; }
-    el.classList.add('glitch'); SFX.play('static');
-    nsTimer = setTimeout(() => { el.classList.toggle('nosig', on); nsTimer = setTimeout(() => el.classList.remove('glitch'), 160); }, 140);
+    // 미니맵 (평면 좌표로 적고 칸 좌표로 옮김). ink = 진한 요소(글자·밝은 선) — 얼굴 상자와 겹치면 안 됨, fog = 흐린 점선(미탐사)
+    const L = (x, y) => [x - X, y - Y];
+    const R = (cls, x1, y1, x2, y2, no, g) => { const [a, b] = L(x1, y1); return `<g class="${cls}" data-glass="map:${g || no}"><rect x="${a}" y="${b}" width="${x2 - x1}" height="${y2 - y1}" rx="5"/>${no ? `<text x="${a + 5}" y="${b + 14}">${no}</text>` : ''}</g>`; };
+    const C = (cls, pts, g) => `<polyline class="${cls}" data-glass="map:${g}" points="${pts.map((p, i) => (i % 2 ? p - Y : p - X)).join(' ')}"/>`;
+    const T = (cls, x, y, s, g) => { const [a, b] = L(x, y); return `<text class="${cls}" data-glass="map:${g}" x="${a}" y="${b}">${s}</text>`; };
+    const D = (cls, x, y, r, g) => { const [a, b] = L(x, y); return `<circle class="${cls}" data-glass="map:${g}" cx="${a}" cy="${b}" r="${r}"/>`; };
+    $('#mm').setAttribute('viewBox', `0 0 ${w} ${h}`);
+    $('#mm').innerHTML = [
+      // 미탐사(흐린 점선): 얼굴(토파즈·오팔·네모필라)이 지나는 가운데·오른쪽 아래는 모두 여기로 — 자세별 얼굴 이동 폭(평면 약 ±25~55px)까지 비움
+      R('room fog', 212, 598, 296, 646, '', 'u4'), R('room fog', 192, 682, 246, 712, '', 'u7'), R('room fog', 436, 656, 460, 694, '', 'u6'),
+      C('cor fog', [146, 613, 212, 613], 'c1-4'), C('cor fog', [296, 622, 322, 622, 322, 664, 344, 664], 'c4-5'), C('cor fog', [121, 690, 121, 697, 192, 697], 'c2-7'),
+      C('cor fog', [402, 674, 436, 674], 'c5-6'),
+      D('thr fog', 262, 622, 3, 'thr-u4'), D('thr fog', 448, 682, 3, 'thr-u6'),
+      // 탐색한 방·통로 (진한 선) — 왼쪽 열(x 96~176)과 가운데 오른쪽(x 344~428)에만
+      C('cor', [121, 628, 121, 648], 'c1-2'), C('cor', [385, 598, 385, 640], 'c3-5'),
+      C('cor', [146, 613, 172, 613], 'c1-e'),
+      R('room', 96, 598, 146, 628, '01'), R('room', 96, 648, 146, 690, '02'),
+      R('room cur', 358, 558, 404, 598, '03'), R('room', 346, 640, 402, 690, '05'),
+      D('thr', 388, 678, 3.2, 'thr-05'),
+      // 원정대 위치 (현재 방 03)
+      `<g class="me" data-glass="map:squad"><circle class="ring" cx="${381 - X}" cy="${582 - Y}" r="6"/><circle cx="${381 - X}" cy="${582 - Y}" r="3.6"/></g>`,
+      // 제목·심도 (왼쪽 열, 얼굴 없는 곳)
+      T('hd', 96, 564, '감염 구역 B3', 'title'), T('sub', 96, 582, '심도 11 · 방 03', 'depth'),
+      // 북쪽 표시·축척 눈금 (왼쪽 아래)
+      `<g class="north" data-glass="map:north"><path d="M${102 - X} ${698 - Y} l5 14 l-5 -4 l-5 4 Z"/><text x="${97 - X}" y="${728 - Y}">N</text></g>`,
+      `<g class="scale" data-glass="map:scale"><path d="M${114 - X} ${722 - Y} v5 h24 v-5 M${126 - X} ${724 - Y} v3"/><text x="${112 - X}" y="${717 - Y}">10 m</text></g>`,
+    ].join('');
   }
 
   const holder = { big: $('#leftKeys'), sq: $('#rightKeys'), closek: $('#rightKeys') };
@@ -477,7 +487,6 @@
       K.el.style.setProperty('--px', f1(px) + 'px'); K.el.style.setProperty('--py', f1(py) + 'px');
     });
     showScreen(mi, animate);
-    setNoSignal(mi === 0, animate);
     if (animate) SFX.play('swap');
   }
   setActive(active, false);
@@ -527,8 +536,10 @@
     // 016 원형 창: 판에서 떠오르며 링이 돌아 들어옴 → 창 유리가 가운데에서 위아래로 열림
     add($('#wring'), [{ opacity: 0, transform: 'scale(.86) rotate(-24deg)', transformOrigin: `${W.cx}px ${W.cy}px` }, { opacity: 1, offset: .3 }, { opacity: .5, offset: .45 }, { opacity: 1, transform: 'scale(1) rotate(0deg)', transformOrigin: `${W.cx}px ${W.cy}px` }], 640, 620, OUT);
     add($('#win'), [{ opacity: 0, transform: 'scaleY(.04)' }, { opacity: 1, transform: 'scaleY(.04)', offset: .15 }, { opacity: .8, transform: 'scaleY(1)', offset: .75 }, { opacity: .45, offset: .85 }, { opacity: 1, transform: 'scaleY(1)' }], 760, 440, 'linear');
-    [$('#title'), $('#status'), $('#panel'), $('#hints'), $('#clock'), $('#tagL'), $('#tagR'), $('#crew')].forEach((el, i) =>
+    [$('#title'), $('#status'), $('#panel'), $('#hints'), $('#clock'), $('#tagL'), $('#tagR'), $('#mm')].forEach((el, i) =>
       add(el, [{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }, { opacity: 1, clipPath: 'inset(0 0 0% 0)' }], 960 + i * 60, 320, 'steps(8, end)'));
+    // 019: #crew는 둥근 판 모양을 clip-path(path)로 자르므로 inset 애니메이션을 걸면 모양이 네모로 덮임 → 판은 깜빡임만, 위에서 아래로 열림은 안쪽 지도(#mm)가 맡음
+    add($('#crew'), [{ opacity: 0 }, { opacity: 1 }], 960 + 7 * 60, 320, 'steps(8, end)');
     const ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, CLOSE];
     ORDER.forEach((i, k) => {
       const left = i < 4;
@@ -697,7 +708,7 @@
   function loop(t) {
     cur.x += (tgt.x - cur.x) * 0.06; cur.y += (tgt.y - cur.y) * 0.06;
     applyFloat(t);
-    if (motion && t - lastGrain > 90) { drawGrain(); lastGrain = t; if (nosig) drawNoise(); }
+    if (motion && t - lastGrain > 90) { drawGrain(); lastGrain = t; }
     frames++; if (t - fpsT > 1000) { window.__fps = Math.round(frames * 1000 / (t - fpsT)); frames = 0; fpsT = t; }
     requestAnimationFrame(loop);
   }
@@ -756,7 +767,7 @@
     const body = $('#scrBody');
     if (body.scrollHeight > body.offsetHeight + 1 || body.scrollWidth > body.offsetWidth + 1) bad.push(`screen:${MENU[active].id}(${body.scrollWidth}x${body.scrollHeight}/${body.offsetWidth}x${body.offsetHeight})`);
     // 화면 위 홀로그램 줄(제목·상태·안내·시계·구역 이름)이 칸을 넘는지
-    ['#title', '#status', '#hints', '#clock', '#tagL', '#tagR', '.scr-head', '.scr-foot', '#crew .cr-head'].forEach((s) => { const e = $(s); if (e.scrollWidth > e.clientWidth + 1) bad.push(`holo:${s}(${e.scrollWidth}>${e.clientWidth})`); });
+    ['#title', '#status', '#hints', '#clock', '#tagL', '#tagR', '.scr-head', '.scr-foot'].forEach((s) => { const e = $(s); if (e.scrollWidth > e.clientWidth + 1) bad.push(`holo:${s}(${e.scrollWidth}>${e.clientWidth})`); });
     // 016: 원형 창 안 글자 — 모든 글자 칸의 네 모서리가 창 가장자리에서 8px 이상 안쪽인지 + 글자 크기 12px 이상인지
     $$('#title *, #status *, #panel *, #hints *').forEach((el) => {
       if (el.closest('svg') && el.tagName !== 'text') return;
@@ -771,25 +782,36 @@
       if (worst < 8) bad.push(`win-edge:${(el.textContent || '').trim().slice(0, 8)}(${worst.toFixed(1)})`);
       if (fs < 12 - 0.01) bad.push(`small:${(el.textContent || '').trim().slice(0, 8)}(${fs.toFixed(1)}px)`);
     });
-    // 원정대 상태 칸: 줄이 칸을 넘거나, 글자가 휜 왼쪽 변·깎인 모서리 밖으로 나가는지
-    { const P = new Path2D(CREW.d), box = $('#crew');
-      $$('#crew b, #crew small, #crew .cr-bar, #crew .cr-dot, #crew .cr-head span').forEach((el) => {
+    // 019 미니맵: 모든 그림 요소(방·통로·글자·표시)가 둥근 판 안쪽 4px 이상인지 + 글자 12px 이상인지
+    { const P = new Path2D(CREW.d), box = $('#crew'); cv.lineWidth = 8;
+      $$('#mm g, #mm polyline, #mm text, #mm circle').forEach((el) => {
         const r = el.getBoundingClientRect(), o = box.getBoundingClientRect(), s = stage._s || 1;
         const x = (r.left - o.left) / s, y = (r.top - o.top) / s, w = r.width / s, h = r.height / s;
-        if (el.scrollWidth > el.clientWidth + 1 || ![[x, y], [x + w, y], [x, y + h], [x + w, y + h]].every((p) => cv.isPointInPath(P, p[0], p[1]))) bad.push('crew:' + (el.textContent || el.className));
-      });
-      if ($('#crewRows').offsetTop + $('#crewRows').offsetHeight > CREW.h) bad.push('crew:rows-height'); }
+        if (![[x, y], [x + w, y], [x, y + h], [x + w, y + h]].every((p) => cv.isPointInPath(P, p[0], p[1]) && !cv.isPointInStroke(P, p[0], p[1]))) bad.push('map:' + (el.dataset.glass || el.textContent || el.tagName));
+        if (el.tagName === 'text' && parseFloat(getComputedStyle(el).fontSize) < 12 - 0.01) bad.push('map-small:' + el.textContent);
+      }); }
     return bad.length ? bad.join(',') : 'none';
   }
   // 실루엣 안쪽 검사 (평면 좌표): 버튼·상태 칸의 네 모서리가 윤곽 안에 있고 윤곽선에서 10px 이상 떨어져 있는지 + 가장 가까운 거리
   function silCheck() {
     const P = new Path2D(SIL); cv.lineWidth = 20;
-    const boxes = KEYS.map((K, i) => [`key${i}`, K.x, K.y, K.w, K.h + 10]).concat([['crew', CREW.x, CREW.y, CREW.w, CREW.h], ['clock', 1301, 80, 248, 110]]);
+    const boxes = KEYS.map((K, i) => [`key${i}`, K.x, K.y, K.w, K.h + 10]).concat([['clock', 1301, 80, 248, 110]]);
     const out = [];
     boxes.forEach(([n, x, y, w, h]) => { if (![[x, y], [x + w, y], [x, y + h], [x + w, y + h]].every((p) => cv.isPointInPath(P, p[0], p[1]) && !cv.isPointInStroke(P, p[0], p[1]))) out.push(n); });
+    // 019: 미니맵 판은 둥근 윤곽이라 상자 대신 윤곽선을 1px마다 따라가며 실루엣 안·선에서 10px 이상인지 + 가장 가까운 거리
+    const ns = 'http://www.w3.org/2000/svg', sv = document.createElementNS(ns, 'svg'), pp = document.createElementNS(ns, 'path');
+    sv.style.cssText = 'position:absolute;width:0;height:0;visibility:hidden'; sv.appendChild(pp); document.body.appendChild(sv);
+    pp.setAttribute('d', CREW.d);
+    let crewGap = 1e9, crewAt = null, crewOut = 0;
+    for (let s = 0, Lp = pp.getTotalLength(); s <= Lp; s += 1) {
+      const q = pp.getPointAtLength(s), x = q.x + CREW.x, y = q.y + CREW.y;
+      if (!cv.isPointInPath(P, x, y)) { crewOut++; continue; }
+      for (let d = 1; d < 150; d++) { cv.lineWidth = 2 * d; if (cv.isPointInStroke(P, x, y)) { if (d < crewGap) { crewGap = d; crewAt = [Math.round(x), Math.round(y)]; } break; } }
+    }
+    sv.remove(); cv.lineWidth = 20;
+    if (crewOut || crewGap < 10) out.push('crew');
     const sx = (y) => { let x = 0; while (x < 400 && !cv.isPointInPath(P, x, y)) x++; return x; }; // 왼쪽 윤곽 x
-    const crewGap = Math.min(...[CREW.y, CREW.y + CREW.h].map((y) => CREW.x + CREW.lx(y) - sx(y)));
-    return (out.length ? 'OUT ' + out.join(',') : 'inside') + ` crewGap ${crewGap.toFixed(1)} hexR ${Math.round(KEYS[6].x + KEYS[6].w)} hexL ${Math.round(KEYS[4].x)}`;
+    return (out.length ? 'OUT ' + out.join(',') : 'inside') + ` crewGap ${crewGap}@${crewAt} crewOutPts ${crewOut} hexR ${Math.round(KEYS[6].x + KEYS[6].w)} hexL ${Math.round(KEYS[4].x)}`;
   }
   // 016: 원형 창 가장자리와 주변 사이 최소 간격 (평면 좌표, 경로를 1px 간격으로 따라가며 잼)
   function winGap() {
@@ -830,13 +852,16 @@
       + ' | WINGAP ' + winGap()
       + ' | WIN ' + (() => { const r = rectOf($('#win')), c = rectOf($('#pC')); return `${Math.round(r.x)},${Math.round(r.y)} ${Math.round(r.w)}x${Math.round(r.h)} ratio ${(r.w / r.h).toFixed(3)} winC ${(r.x + r.w / 2).toFixed(1)},${(r.y + r.h / 2).toFixed(1)} plateC ${(c.x + 1).toFixed(1)},${(c.y + 1).toFixed(1)}`; })()
       + ' | OVERFLOW ' + overflowCheck()
-      + ` | CREWBOX gap ${GAP.x},${GAP.y} ${GAP.w}x${GAP.h} c ${(GAP.x + GAP.w / 2).toFixed(1)},${(GAP.y + GAP.h / 2).toFixed(1)} box ${CREW.x},${CREW.y} ${CREW.w}x${CREW.h} c ${(CREW.x + CREW.w / 2).toFixed(1)},${(CREW.y + CREW.h / 2).toFixed(1)} area ${(CREW.w * CREW.h / (GAP.w * GAP.h) * 100).toFixed(1)}% nosig ${nosig ? 1 : 0}`
-      + ' | CREWINK ' + ((l) => (l.length ? l.join(', ') : 'none'))(hitList(nosig ? '#crew .ns-big, #crew .ns-sub' : '#crew .cr-row b, #crew .cr-row small, #crew .cr-bar, #crew .cr-dot, #crew .cr-head b, #crew .cr-head span'))
+      + ` | MAPBOX area ${AREA.x},${AREA.y} ${AREA.w}x${AREA.h} box ${CREW.x},${CREW.y} ${CREW.w}x${CREW.h}`
+      + ' | MAPINK ' + ((l) => (l.length ? l.join(', ') : 'none'))(hitList('#mm g:not(.fog), #mm polyline:not(.fog), #mm text, #mm circle:not(.fog)'))
+      + ' | MAPFOG ' + ((l) => (l.length ? l.join(', ') : 'none'))(hitList('#mm .fog'))
       + ' | CREWR ' + (() => { const r = rectOf($('#crew')); return `${Math.round(r.x)},${Math.round(r.y)},${Math.round(r.w)},${Math.round(r.h)}`; })();
-    if (Q.get('crewbox') === '1' && !$('#gapbox')) { const d = document.createElement('div'); d.id = 'gapbox'; Object.assign(d.style, { position: 'absolute', left: GAP.x + 'px', top: GAP.y + 'px', width: GAP.w + 'px', height: GAP.h + 'px', outline: '2px dashed #ffd84a', pointerEvents: 'none', zIndex: 50 }); $('#crew').parentElement.appendChild(d); $('#crew').style.outline = '2px solid #ff5fd0'; }
+    if (Q.get('crewbox') === '1' && !$('#gapbox')) { const d = document.createElement('div'); d.id = 'gapbox'; Object.assign(d.style, { position: 'absolute', left: AREA.x + 'px', top: AREA.y + 'px', width: AREA.w + 'px', height: AREA.h + 'px', outline: '2px dashed #ffd84a', pointerEvents: 'none', zIndex: 50 }); $('#crew').parentElement.appendChild(d); $('#crew').style.outline = '2px solid #ff5fd0'; }
     if (Q.get('guard') === '1') FACES.forEach((f) => { const d = document.createElement('div'); d.className = 'guard'; Object.assign(d.style, { left: f.x + 'px', top: f.y + 'px', width: f.w + 'px', height: f.h + 'px' }); stage.appendChild(d); });
   }
-  window.__overflowAll = () => { const out = []; for (let m = 0; m < MENU.length; m++) { setActive(m, false); out.push(MENU[m].id + ':' + overflowCheck()); } setActive(active, false); return out.join(' | '); };
+  window.__overflowAll = () => { const out = []; const ref = $('#crew').outerHTML; let same = 0; for (let m = 0; m < MENU.length; m++) { setActive(m, false); out.push(MENU[m].id + ':' + overflowCheck()); if ($('#crew').outerHTML === ref) same++; } setActive(active, false); return out.join(' | ') + ` | MAPSAME ${same}/${MENU.length}`; };
+  // 019: ?mapfill=1 → 판 모양만 단색(자홍)으로 칠함 (area_match.png 면적 비교용, 사용자 화면에는 안 씀)
+  if (Q.get('mapfill') === '1') { const e = $('#crew'); e.style.background = '#ff00ff'; e.style.boxShadow = 'none'; [...e.children].forEach((c) => { c.style.visibility = 'hidden'; }); }
 
   /* ---------- 시작 ---------- */
   const start = () => {

@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>LeftBehind — 포터블 콘솔 시안 018 (원정대 상태 칸 빈자리 가운데·80%, 원정대 메뉴일 때 NO SIGNAL, 카세트 버튼 효과음)</title>
+<title>LeftBehind — 포터블 콘솔 시안 019 (미니맵 버전: 왼쪽 아래 칸을 손잡이 곡선 따른 둥근 판으로, 어떤 메뉴에서든 미니맵)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="css/menu.css">
 </head>
@@ -59,14 +59,9 @@
               <div class="ck-time">14:32<small>:07</small></div>
               <div class="ck-bot"><span>심도 11 · 방 3</span><span class="ck-bars"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span></div>
             </div>
-            <!-- 왼쪽 구역 아래: 원정대 상태 표시 (버튼 아님). 018: 빈자리 가운데·80% 크기, 원정대 메뉴일 때 NO SIGNAL -->
-            <div id="crew" data-glass="crew" aria-label="원정대 상태"><svg class="crew-line" viewBox="0 0 246 239" aria-hidden="true"><path id="crewPath"/></svg>
-              <div class="cr-sum">
-                <div class="cr-head"><b>원정대 상태</b><span><i class="cr-dot hurt"></i>부상 1 · 수신 4/4</span></div>
-                <ul id="crewRows"></ul>
-              </div>
-              <div class="cr-ns" aria-hidden="true"><canvas id="crewNoise"></canvas><i class="ns-scan"></i>
-                <b class="ns-big">NO<br>SIGNAL</b><small class="ns-sub">신호 없음<br>원정대 화면 표시 중</small></div>
+            <!-- 왼쪽 구역 아래: 미니맵 (버튼 아님). 019: 사용자 표시 영역 모양(손잡이 곡선을 따른 둥근 판), 어떤 메뉴에서든 미니맵만 -->
+            <div id="crew" data-glass="minimap" aria-label="미니맵 — 지하 감염 구역"><i class="mm-grid"></i><svg class="crew-line" viewBox="0 0 246 239" aria-hidden="true"><path id="crewPath"/></svg>
+              <svg id="mm" aria-hidden="true"></svg><i class="mm-scan"></i><i class="mm-lines"></i>
             </div>
             <div class="zone-tag" id="tagL"><b>L</b>원정 관리<i></i></div>
             <div class="zone-tag r" id="tagR"><i></i>기록 · 시스템<b>R</b></div>

@@ -1,4 +1,4 @@
-/* UIDiorama 018 — 효과음 (Web Audio API 합성. 외부 음원·라이브러리 없음)
+/* UIDiorama 019 — 효과음 (018에서 복사, NO SIGNAL 지직 static 뺌) (Web Audio API 합성. 외부 음원·라이브러리 없음)
    같은 합성 함수를 실시간 재생(AudioContext)과 파일 굽기(OfflineAudioContext → WAV)에 함께 씀.
    window.LBSFX.play(name)  /  .unlock()  /  .setMuted(b)  /  .renderWav(names, gap) → base64 WAV
    소리 (길이):
@@ -8,11 +8,10 @@
      open    메뉴 열기 — 낮은 웅 + 반짝 (~0.75s)
      close   메뉴 닫기 — 꺼짐 (~0.5s)
      swap    화면 전환 — 짧은 데이터 쓸림 (~0.2s)
-     static  NO SIGNAL 전환 — 지직 잡음 (~0.28s)
      back    돌아가기 — 내려가는 두 음 (~0.22s)                                                         */
 (function () {
   'use strict';
-  const LEN = { clack: 0.16, release: 0.08, tick: 0.04, open: 0.8, close: 0.55, swap: 0.24, static: 0.3, back: 0.26 };
+  const LEN = { clack: 0.16, release: 0.08, tick: 0.04, open: 0.8, close: 0.55, swap: 0.24, back: 0.26 };
 
   /* 시드 고정 난수 (굽기 결과가 매번 같게). 실시간은 Math.random 으로 변화를 줌 */
   function rng(seed) { let s = seed >>> 0; return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; }; }
@@ -99,19 +98,6 @@
       noise(ctx, out, t, { type: 'bandpass', f: 7000 * p, f2: 1400 * p, q: 1.2, peak: 0.12 * v, atk: 0.012, dec: 0.15, off: r() });
       [1568, 2093, 1760, 2637].forEach((f, i) => tone(ctx, out, t + 0.02 + i * 0.03, { f: f * p, type: 'square', peak: 0.008 * v, dec: 0.02 }));
     },
-    static(ctx, out, t, p, v, r) {
-      // 지직: 잘게 끊긴 잡음 (세기가 계단식으로 튐) + 낮은 웅웅거림
-      const s = ctx.createBufferSource(); s.buffer = noiseBuf(ctx);
-      const bq = ctx.createBiquadFilter(); bq.type = 'bandpass'; bq.frequency.value = 2400 * p; bq.Q.value = 0.7;
-      const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t);
-      for (let k = 0; k < 14; k++) g.gain.setValueAtTime((r() < 0.75 ? 0.05 + r() * 0.12 : 0.004) * v, t + k * 0.018);
-      g.gain.setValueAtTime(0.0001, t + 0.26);
-      s.connect(bq).connect(g).connect(out); s.start(t, r() * 0.5); s.stop(t + 0.28);
-      const o = ctx.createOscillator(), lp = ctx.createBiquadFilter(), og = ctx.createGain();
-      o.type = 'sawtooth'; o.frequency.value = 60; lp.type = 'lowpass'; lp.frequency.value = 400;
-      og.gain.setValueAtTime(0.05 * v, t); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.26);
-      o.connect(lp).connect(og).connect(out); o.start(t); o.stop(t + 0.28);
-    },
     back(ctx, out, t, p, v) {
       tone(ctx, out, t, { f: 1397 * p, peak: 0.06 * v, atk: 0.003, dec: 0.07 });
       tone(ctx, out, t + 0.075, { f: 932 * p, peak: 0.06 * v, atk: 0.003, dec: 0.12 });
@@ -120,7 +106,7 @@
   };
 
   /* 믹스: 소리별 음량 → 묶음 압축 → 전체 음량(낮게) */
-  const LEVEL = { clack: 1.0, release: 0.8, tick: 0.7, open: 0.85, close: 0.8, swap: 0.7, static: 0.6, back: 0.8 };
+  const LEVEL = { clack: 1.0, release: 0.8, tick: 0.7, open: 0.85, close: 0.8, swap: 0.7, back: 0.8 };
   const MASTER = 0.5;
   function bus(ctx) {
     const comp = ctx.createDynamicsCompressor();

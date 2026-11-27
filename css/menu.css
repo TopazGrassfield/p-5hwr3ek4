@@ -257,43 +257,39 @@ kbd { font-family: 'LB Num', sans-serif; }
 .zone-tag.r i { background: linear-gradient(90deg, transparent, rgba(var(--frame-rgb),.9)); }
 .zone-tag b { font: 600 13px 'LB Num'; letter-spacing: 0; padding: 0 5px; border: 1px solid rgba(var(--holo-rgb),.55); border-radius: 4px; }
 
-/* 왼쪽 구역 아래 원정대 상태 표시 — 버튼 아님: 두께·그림자·눌림 없음, 얇은 발광 윤곽만 */
-#crew { position: absolute; pointer-events: none; background: rgba(3,10,18,.30); }
-/* 018: 커진 칸 (246×239). 인물(토파즈·오팔) 얼굴이 칸 오른쪽 절반 뒤에 있음 → 바탕은 옅게(얼굴이 비쳐 보이게),
-   글자·막대 같은 진한 요소는 왼쪽 열(칸 왼쪽 끝에서 ~104px)에 모으고 오른쪽은 옅은 주사선만. */
-#crew { background: linear-gradient(90deg, rgba(3,10,18,.26) 0 46%, rgba(3,10,18,.08) 62%); }
-#crew::after { content: ''; position: absolute; left: 120px; top: 14px; bottom: 14px; border-left: 1px dashed rgba(var(--frame-rgb),.22); }
-#crew .cr-sum { position: absolute; inset: 0; padding: 8px 0 0 11px; transition: opacity .12s; }
-#crew.nosig .cr-sum { opacity: 0; visibility: hidden; }
-#crew .cr-ns { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 10px; padding: 30px 0 0 14px; opacity: 0; visibility: hidden; }
-#crew.nosig .cr-ns { opacity: 1; visibility: visible; animation: nsFlick 3.2s steps(1) infinite; }
-#crew .cr-ns canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; opacity: .32; mix-blend-mode: screen; }
-#crew .ns-scan { position: absolute; inset: 0; background: repeating-linear-gradient(180deg, rgba(var(--holo-rgb),.09) 0 1px, transparent 1px 4px); }
-#crew .ns-scan::after { content: ''; position: absolute; left: 0; right: 0; height: 26px; top: -30px; background: linear-gradient(180deg, transparent, rgba(var(--holo-rgb),.14), transparent); animation: nsRoll 2.6s linear infinite; }
-#crew .ns-big { position: relative; font: 700 24px/26px 'LB Code'; letter-spacing: 2px; color: var(--holo); text-shadow: 0 0 10px rgba(var(--holo-rgb),.8), 2px 0 rgba(var(--acc-rgb),.45), -2px 0 rgba(120,200,255,.35); white-space: nowrap; }
-#crew .ns-sub { position: relative; font: 600 12px/17px 'LB Sans'; opacity: .85; white-space: nowrap; }
-#crew.glitch { animation: nsGlitch .3s steps(3) 1; }
-@keyframes nsFlick { 0%, 100% { opacity: 1; } 41% { opacity: .55; } 43% { opacity: 1; } 77% { opacity: .75; } 78% { opacity: 1; } }
-@keyframes nsRoll { to { top: 100%; } }
-@keyframes nsGlitch { 0% { filter: brightness(1.8) contrast(1.4); transform: translateX(-3px); } 33% { filter: brightness(.5); transform: translateX(2px) skewX(-6deg); } 66% { filter: brightness(1.5); transform: translateX(-1px); } 100% { filter: none; transform: none; } }
-body.still #crew.nosig .cr-ns, body.still #crew .ns-scan::after { animation: none; }
-@media (prefers-reduced-motion: reduce) { #crew.nosig .cr-ns, #crew .ns-scan::after, #crew.glitch { animation: none !important; } }
-#crew .crew-line { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-#crew .crew-line path { fill: none; stroke: rgba(var(--frame-rgb),.55); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
-#crew .cr-head { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; width: 116px; height: 40px; white-space: nowrap; }
-#crew .cr-head b { font: 700 15px/18px 'LB Sans'; letter-spacing: 0; }
-#crew .cr-head span { display: flex; align-items: center; gap: 5px; font: 600 12px/15px 'LB Sans'; opacity: .85; }
-#crew ul { list-style: none; margin: 6px 0 0; padding: 6px 0 0; width: 71px; border-top: 1px solid rgba(var(--frame-rgb),.25); }
-/* 018: 대원 한 명 = 이름 줄 + 막대·수치 줄 (한 줄로 두면 막대·수치가 얼굴 앞을 지나감 → 두 줄 유지) */
-#crew .cr-row { display: grid; grid-template-columns: 8px 29px 26px; grid-template-rows: 18px 15px; grid-template-areas: 'd n n' 'b b s'; column-gap: 4px; row-gap: 4px; align-items: center; height: 44px; white-space: nowrap; }
-#crew .cr-row .cr-dot { grid-area: d; }
-#crew .cr-row b { grid-area: n; font: 700 14px/18px 'LB Sans'; }
-#crew .cr-bar { grid-area: b; height: 6px; background: rgba(var(--holo-rgb),.16); }
-#crew .cr-bar i { display: block; height: 100%; background: var(--holo); box-shadow: 0 0 6px rgba(var(--holo-rgb),.6); }
-#crew .cr-row.hurt .cr-bar i { background: var(--accent); }
-#crew .cr-row small { grid-area: s; font: 600 12px/15px 'LB Num'; opacity: .9; text-align: right; }
-#crew .cr-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--holo); box-shadow: 0 0 6px rgba(var(--holo-rgb),.9); }
-#crew .cr-dot.hurt { background: var(--accent); box-shadow: 0 0 6px rgba(var(--acc-rgb),1); animation: blink 2.4s steps(1) infinite; }
+/* 019: 왼쪽 아래 미니맵 — 버튼 아님. 사용자 표시 영역 모양의 둥근 판, 얇은 발광 테두리.
+   인물(토파즈·오팔) 얼굴이 판 가운데 뒤에 있음 → 바탕은 018보다 더 옅게(왼쪽 .20 → 가운데 .05),
+   진한 요소(글자·밝은 방 선)는 얼굴이 없는 왼쪽 열과 오른쪽 끝에만, 얼굴 뒤는 흐린 점선(미탐사)만. */
+#crew { position: absolute; pointer-events: none; overflow: hidden;
+  background: linear-gradient(90deg, rgba(3,10,18,.20) 0 12%, rgba(3,10,18,.05) 32% 66%, rgba(3,10,18,.16) 84%); }
+#crew .crew-line { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 0 4px rgba(var(--holo-rgb),.7)); }
+#crew .crew-line path { fill: none; stroke: rgba(var(--frame-rgb),.7); stroke-width: 2.4; }
+#crew .mm-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(var(--holo-rgb),.07) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--holo-rgb),.07) 1px, transparent 1px); background-size: 25px 25px; background-position: 20px 4px; }
+#crew .mm-lines { position: absolute; inset: 0; background: repeating-linear-gradient(180deg, rgba(var(--holo-rgb),.07) 0 1px, transparent 1px 4px); }
+#crew .mm-scan { position: absolute; top: 0; bottom: 0; width: 60px; left: -70px; background: linear-gradient(90deg, transparent, rgba(var(--holo-rgb),.13), transparent); animation: mmScan 6s linear infinite; }
+@keyframes mmScan { to { left: 100%; } }
+#mm { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+#mm text { font: 700 12px 'LB Num'; fill: var(--holo); }
+#mm .room rect { fill: rgba(var(--holo-rgb),.10); stroke: rgba(var(--holo-rgb),.85); stroke-width: 1.5; }
+#mm .room text { fill: rgba(var(--holo-rgb),.95); }
+#mm .room.cur rect { fill: rgba(var(--holo-rgb),.22); stroke: var(--holo); stroke-width: 2; animation: mmPulse 1.8s ease-in-out infinite; }
+@keyframes mmPulse { 50% { fill: rgba(var(--holo-rgb),.06); stroke-opacity: .55; } }
+#mm .cor { fill: none; stroke: rgba(var(--holo-rgb),.7); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+#mm .fog, #mm .fog rect { fill: none; stroke: rgba(var(--holo-rgb),.30); stroke-width: 1.2; stroke-dasharray: 3 4; }
+#mm .cor.fog { stroke-width: 1.4; }
+#mm .thr { fill: var(--accent); filter: drop-shadow(0 0 3px rgba(var(--acc-rgb),.9)); }
+#mm .thr.fog { fill: rgba(var(--acc-rgb),.45); stroke: none; filter: none; }
+#mm .me circle { fill: #fff; filter: drop-shadow(0 0 4px rgba(var(--holo-rgb),1)); }
+#mm .me .ring { fill: none; stroke: #fff; stroke-width: 1.2; transform-box: fill-box; transform-origin: center; animation: mmPing 1.8s ease-out infinite; }
+@keyframes mmPing { from { transform: scale(.6); opacity: 1; } to { transform: scale(2.2); opacity: 0; } }
+#mm .hd { font: 700 14px 'LB Sans'; }
+#mm .sub { font: 600 12px 'LB Sans'; fill-opacity: .85; }
+#mm .north path { fill: var(--holo); }
+#mm .north text, #mm .scale text { font-size: 12px; }
+#mm .scale path { fill: none; stroke: rgba(var(--holo-rgb),.85); stroke-width: 1.4; }
+body.still #crew .mm-scan, body.still #mm .room.cur rect, body.still #mm .me .ring { animation: none; }
+body.still #mm .me .ring { opacity: .7; transform: scale(1.4); }
+@media (prefers-reduced-motion: reduce) { #crew .mm-scan, #mm .room.cur rect, #mm .me .ring { animation: none !important; } }
 
 /* 오른쪽 구역 위 시계·상태 (011) */
 #clock { position: absolute; left: 1301px; top: 80px; width: 248px; height: 110px; padding: 9px 14px 13px;
