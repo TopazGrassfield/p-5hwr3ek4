@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>LeftBehind — 포터블 콘솔 시안 017 (원형 창 다듬기: 위아래 6.5%만 깎고 지름 11% 줄여 여백 넓힘)</title>
+<title>LeftBehind — 포터블 콘솔 시안 018 (원정대 상태 칸 빈자리 가운데·80%, 원정대 메뉴일 때 NO SIGNAL, 카세트 버튼 효과음)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="css/menu.css">
 </head>
@@ -59,10 +59,14 @@
               <div class="ck-time">14:32<small>:07</small></div>
               <div class="ck-bot"><span>심도 11 · 방 3</span><span class="ck-bars"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span></div>
             </div>
-            <!-- 왼쪽 구역 아래: 원정대 상태 표시 (버튼 아님 — 누를 수 없는 납작한 홀로그램 칸, JS가 줄을 채움) -->
-            <div id="crew" data-glass="crew" aria-label="원정대 상태"><svg class="crew-line" viewBox="0 0 180 128" aria-hidden="true"><path id="crewPath"/></svg>
-              <div class="cr-head"><b>원정대 상태</b><span><i class="cr-dot hurt"></i>부상 1</span></div>
-              <ul id="crewRows"></ul>
+            <!-- 왼쪽 구역 아래: 원정대 상태 표시 (버튼 아님). 018: 빈자리 가운데·80% 크기, 원정대 메뉴일 때 NO SIGNAL -->
+            <div id="crew" data-glass="crew" aria-label="원정대 상태"><svg class="crew-line" viewBox="0 0 246 239" aria-hidden="true"><path id="crewPath"/></svg>
+              <div class="cr-sum">
+                <div class="cr-head"><b>원정대 상태</b><span><i class="cr-dot hurt"></i>부상 1 · 수신 4/4</span></div>
+                <ul id="crewRows"></ul>
+              </div>
+              <div class="cr-ns" aria-hidden="true"><canvas id="crewNoise"></canvas><i class="ns-scan"></i>
+                <b class="ns-big">NO<br>SIGNAL</b><small class="ns-sub">신호 없음<br>원정대 화면 표시 중</small></div>
             </div>
             <div class="zone-tag" id="tagL"><b>L</b>원정 관리<i></i></div>
             <div class="zone-tag r" id="tagR"><i></i>기록 · 시스템<b>R</b></div>
@@ -94,7 +98,7 @@
                 <span class="scr-live"><i></i>단말 연결</span>
               </header>
               <div class="scr-body" id="scrBody"></div>
-              <footer class="scr-foot"><span id="scrFoot">심도 11 · 방 3 · 전투 차례 멈춤</span><span class="tmp">보기용 임시 값</span></footer>
+              <footer class="scr-foot"><span id="scrFoot">심도 11 · 방 3 · 전투 차례 멈춤</span></footer>
               <i class="panel-sweep" id="pSweep"></i>
             </section>
             <div id="hints" data-glass="hints">
@@ -130,7 +134,9 @@
   <button data-theme="k2" title="K2 푸른 선 + 노랑">2</button>
   <button data-theme="k3" title="K3 푸른 선 + 호박색">3</button>
   <button id="padMotion" title="움직임 켜기/끄기">움직임</button>
+  <button id="padSound" title="소리 켜기/끄기 (M)">소리</button>
 </div>
+<script src="js/sfx.js"></script>
 <script src="js/menu.js"></script>
 </body>
 </html>

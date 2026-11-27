@@ -21,6 +21,7 @@
   const stage = $('#stage');
   const NS = 'http://www.w3.org/2000/svg';
   const f1 = (v) => (+v).toFixed(1);
+  const SFX = window.LBSFX || { play() {}, setMuted() {}, onMute() {}, muted: true }; // 018 효과음 (js/sfx.js)
 
   /* ---------- 평면 기준 (1640×860) ----------
      왼쪽 구역 0~420 / 가운데 화면 420~1220 / 오른쪽 구역 1220~1640. 중심 (820,430).
@@ -211,24 +212,44 @@
   { const c = hcen(1, 2.5); KEYS.push({ kind: 'closek', hex: { c: 1, rr: 2.5 }, x: c.x - HX.W / 2, y: c.y - HX.H / 2, w: HX.W, h: HX.H, d: HEXD }); }
   const CLOSE = KEYS.length - 1;
 
-  /* 원정대 상태 표시 (버튼 아님): 왼쪽 큰 버튼 4개 바로 아래 (간격 12 = 버튼 간격).
-     왼쪽 변은 버튼 바깥 호와 같은 중심 (1200,430)의 반지름 1156 호 → 버튼 곡선과 나란히 휘고 손잡이 안쪽에 들어감.
-     오른쪽 끝 x 184, 아래 끝 y 640: 마우스가 오른쪽 끝(판이 오른쪽으로 다가옴)·떠다님 최저점일 때도 토파즈·오팔 얼굴에 닿지 않게 (160×150일 때 34×11px, 142×136일 때 15×3px 닿음 → 줄임). */
-  const CREW = { x: 46, y: 508, w: 138, h: 132, r: 1156 };
+  /* 원정대 상태 표시 (버튼 아님): 왼쪽 큰 버튼 4개 아래 빈자리.
+     (015~017: 138×132, 왼쪽 변 = 버튼 바깥 호와 같은 중심의 호, 얼굴을 피하려고 작게 둠)
+  /* 018: 빈자리(버튼 아래 12px ~ 실루엣선 10px 안쪽, 오른쪽 끝 = 버튼 안쪽 호 끝 x322) = x46 y508 276×269 (중심 184,642.5).
+     칸 = 가로·세로 각 89% → 246×239, 같은 중심 → x61 y523 (면적 79.6%). 왼쪽 변은 직선(빈자리 왼쪽이 실루엣 직선 구간), 모서리 깎기. */
+  const GAP = { x: 46, y: 508, w: 276, h: 269 };
+  const CREW = { w: 246, h: 239 };
+  CREW.x = Math.round(GAP.x + (GAP.w - CREW.w) / 2); CREW.y = Math.round(GAP.y + (GAP.h - CREW.h) / 2);
   {
-    const lx = (y) => LA.cx - Math.sqrt(CREW.r * CREW.r - (y - LA.cy) ** 2) - CREW.x;
-    const { w, h } = CREW, t = lx(CREW.y), b = lx(CREW.y + h);
-    CREW.d = `M${f1(t)} 0 H${w - 12} L${w} 12 V${h - 8} L${w - 8} ${h} H${f1(b)} A${CREW.r} ${CREW.r} 0 0 1 ${f1(t)} 0 Z`;
-    CREW.lx = lx;
+    const { w, h } = CREW;
+    CREW.d = `M0 0 H${w - 14} L${w} 14 V${h} H18 L0 ${h - 18} Z`;
+    CREW.lx = () => 0;
     const el = $('#crew');
     Object.assign(el.style, { left: CREW.x + 'px', top: CREW.y + 'px', width: w + 'px', height: h + 'px', clipPath: `path("${CREW.d}")` });
     el.querySelector('svg').setAttribute('viewBox', `0 0 ${w} ${h}`);
     $('#crewPath').setAttribute('d', CREW.d);
-    $('#crewRows').innerHTML = SQUAD.map((m, i) => {
+    $('#crewRows').innerHTML = SQUAD.map((m) => {
       const hurt = m.hp / m.max <= 0.5;
-      return `<li class="cr-row${hurt ? ' hurt' : ''}" style="padding-left:${f1(lx(CREW.y + 30 + i * 25 + 12) + 8)}px"><i class="cr-dot${hurt ? ' hurt' : ''}" title="${hurt ? '부상' : '정상'}"></i><b>${m.n}</b><small>${m.hp}/${m.max}</small><span class="cr-bar"><i style="width:${Math.round(m.hp / m.max * 100)}%"></i></span></li>`;
+      return `<li class="cr-row${hurt ? ' hurt' : ''}"><i class="cr-dot${hurt ? ' hurt' : ''}" title="${hurt ? '부상' : '정상'}"></i><b>${m.n}</b><span class="cr-bar"><i style="width:${Math.round(m.hp / m.max * 100)}%"></i></span><small>${m.hp}/${m.max}</small></li>`;
     }).join('');
-    el.querySelector('.cr-head').style.paddingLeft = f1(t + 10) + 'px';
+  }
+  /* 018: 원정대 메뉴를 보는 동안 왼쪽 상태 칸 = NO SIGNAL (같은 정보가 가운데 창에 나오므로) */
+  const nsCv = $('#crewNoise'), nsCtx = nsCv.getContext('2d');
+  nsCv.width = Math.round(CREW.w / 2); nsCv.height = Math.round(CREW.h / 2);
+  function drawNoise() {
+    const img = nsCtx.createImageData(nsCv.width, nsCv.height), d = img.data;
+    for (let i = 0; i < d.length; i += 4) { const v = Math.random() * 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = Math.random() < 0.5 ? 70 : 20; }
+    nsCtx.putImageData(img, 0, 0);
+  }
+  drawNoise();
+  let nosig = null, nsTimer = 0;
+  function setNoSignal(on, animate) {
+    if (nosig === on) return;
+    const first = nosig === null; nosig = on;
+    const el = $('#crew');
+    clearTimeout(nsTimer);
+    if (!animate || first || !motion) { el.classList.toggle('nosig', on); el.classList.remove('glitch'); return; }
+    el.classList.add('glitch'); SFX.play('static');
+    nsTimer = setTimeout(() => { el.classList.toggle('nosig', on); nsTimer = setTimeout(() => el.classList.remove('glitch'), 160); }, 140);
   }
 
   const holder = { big: $('#leftKeys'), sq: $('#rightKeys'), closek: $('#rightKeys') };
@@ -456,6 +477,8 @@
       K.el.style.setProperty('--px', f1(px) + 'px'); K.el.style.setProperty('--py', f1(py) + 'px');
     });
     showScreen(mi, animate);
+    setNoSignal(mi === 0, animate);
+    if (animate) SFX.play('swap');
   }
   setActive(active, false);
 
@@ -531,6 +554,7 @@
     scene.classList.add('on'); $('#screen').setAttribute('aria-hidden', 'false');
     $('#openBtn').classList.add('hide'); $('#padMenu').classList.add('on'); $('#padMenu').textContent = '닫기';
     const fast = !motion && freezeAt == null;
+    if (freezeAt == null) SFX.play('open');
     anims = timeline().map((t) => t.el.animate(t.kf, { delay: fast ? 0 : t.delay, duration: fast ? 160 : t.dur, easing: fast ? 'linear' : t.easing, fill: 'both' }));
     if (freezeAt != null) { anims.forEach((a) => { a.pause(); a.currentTime = freezeAt; }); busy = false; return; }
     Promise.all(anims.map((a) => a.finished)).then(() => {
@@ -541,10 +565,11 @@
       guardCheck();
     }).catch(() => {});
   }
-  function close(freezeAt) {
+  function close(freezeAt, snd = 'close') {
     if (!isOpen && freezeAt == null) return;
     clearAnims();
     busy = true;
+    if (freezeAt == null) SFX.play(snd);
     kb.forEach((b) => b.classList.remove('pressed'));
     const T = timeline();
     const total = Math.max(...T.map((t) => t.delay + t.dur));
@@ -566,8 +591,9 @@
   /* ---------- 눌림·되튐 ---------- */
   let focusIdx = active;
   let lockState = false;
-  function setHot(i) {
+  function setHot(i, silent) {
     if (lockState) return;
+    if (!silent && i !== focusIdx && isOpen && !busy) SFX.play('tick');
     kb.forEach((b, k) => b.classList.toggle('hot', k === i));
     focusIdx = i;
   }
@@ -576,17 +602,19 @@
   function activate(i) {
     const K = KEYS[i];
     if (K.menu != null) setActive(K.menu, true);
-    else if (!busy) close();
+    else if (!busy) close(undefined, 'back');
   }
   function bindPress(el, onRelease, hitEl) {
     hitEl.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       e.preventDefault();
       el.classList.add('pressed'); try { hitEl.setPointerCapture(e.pointerId); } catch (_) { /* */ } thunk();
+      SFX.unlock && SFX.unlock(); SFX.play('clack');
     });
     hitEl.addEventListener('pointerup', (e) => {
       if (!el.classList.contains('pressed')) return;
       el.classList.remove('pressed');
+      SFX.play('release');
       const r = hitEl.getBoundingClientRect();
       if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom) onRelease();
     });
@@ -595,16 +623,17 @@
   kb.forEach((b, i) => {
     const face = b.querySelector('.kface');
     face.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') setHot(i); });
-    bindPress(b, () => { setHot(i); activate(i); }, face);
+    bindPress(b, () => { setHot(i, true); activate(i); }, face);
   });
   $('#openBtn').addEventListener('click', () => { if (!busy) open(); });
 
   function keyPress(i) {
     const b = kb[i];
-    b.classList.add('pressed'); thunk();
-    setTimeout(() => { b.classList.remove('pressed'); activate(i); }, 130);
+    b.classList.add('pressed'); thunk(); SFX.play('clack');
+    setTimeout(() => { b.classList.remove('pressed'); SFX.play('release'); activate(i); }, 130);
   }
   addEventListener('keydown', (e) => {
+    if (e.key === 'm' || e.key === 'M') { SFX.setMuted(!SFX.muted); return; }
     if (e.key === 'Escape') { e.preventDefault(); toggle(); return; }
     if (e.key === '1' || e.key === '2' || e.key === '3') { setTheme('k' + e.key, true); return; }
     if (!isOpen || busy) return;
@@ -618,6 +647,10 @@
   const syncMotionBtn = () => padMotion.classList.toggle('on', motion);
   padMotion.addEventListener('click', () => { motion = !motion; syncMotionBtn(); });
   syncMotionBtn();
+  const padSound = $('#padSound');
+  const syncSoundBtn = (m) => { padSound.classList.toggle('on', !m); padSound.textContent = m ? '소리 꺼짐' : '소리'; };
+  padSound.addEventListener('click', () => { SFX.unlock && SFX.unlock(); SFX.setMuted(!SFX.muted); });
+  SFX.onMute(syncSoundBtn); syncSoundBtn(SFX.muted);
 
   /* ---------- 떠 있음 + 마우스 시차 (013에서 방향 고침) ----------
      CSS 회전 부호: rotateY(+θ) = 오른쪽 가장자리가 뒤로·왼쪽이 앞으로 / rotateX(+θ) = 아래 가장자리가 앞으로.
@@ -664,7 +697,7 @@
   function loop(t) {
     cur.x += (tgt.x - cur.x) * 0.06; cur.y += (tgt.y - cur.y) * 0.06;
     applyFloat(t);
-    if (motion && t - lastGrain > 90) { drawGrain(); lastGrain = t; }
+    if (motion && t - lastGrain > 90) { drawGrain(); lastGrain = t; if (nosig) drawNoise(); }
     frames++; if (t - fpsT > 1000) { window.__fps = Math.round(frames * 1000 / (t - fpsT)); frames = 0; fpsT = t; }
     requestAnimationFrame(loop);
   }
@@ -740,7 +773,7 @@
     });
     // 원정대 상태 칸: 줄이 칸을 넘거나, 글자가 휜 왼쪽 변·깎인 모서리 밖으로 나가는지
     { const P = new Path2D(CREW.d), box = $('#crew');
-      $$('#crew b, #crew small, #crew .cr-bar, #crew .cr-dot').forEach((el) => {
+      $$('#crew b, #crew small, #crew .cr-bar, #crew .cr-dot, #crew .cr-head span').forEach((el) => {
         const r = el.getBoundingClientRect(), o = box.getBoundingClientRect(), s = stage._s || 1;
         const x = (r.left - o.left) / s, y = (r.top - o.top) / s, w = r.width / s, h = r.height / s;
         if (el.scrollWidth > el.clientWidth + 1 || ![[x, y], [x + w, y], [x, y + h], [x + w, y + h]].every((p) => cv.isPointInPath(P, p[0], p[1]))) bad.push('crew:' + (el.textContent || el.className));
@@ -796,7 +829,11 @@
       + ' | SIL ' + silCheck()
       + ' | WINGAP ' + winGap()
       + ' | WIN ' + (() => { const r = rectOf($('#win')), c = rectOf($('#pC')); return `${Math.round(r.x)},${Math.round(r.y)} ${Math.round(r.w)}x${Math.round(r.h)} ratio ${(r.w / r.h).toFixed(3)} winC ${(r.x + r.w / 2).toFixed(1)},${(r.y + r.h / 2).toFixed(1)} plateC ${(c.x + 1).toFixed(1)},${(c.y + 1).toFixed(1)}`; })()
-      + ' | OVERFLOW ' + overflowCheck();
+      + ' | OVERFLOW ' + overflowCheck()
+      + ` | CREWBOX gap ${GAP.x},${GAP.y} ${GAP.w}x${GAP.h} c ${(GAP.x + GAP.w / 2).toFixed(1)},${(GAP.y + GAP.h / 2).toFixed(1)} box ${CREW.x},${CREW.y} ${CREW.w}x${CREW.h} c ${(CREW.x + CREW.w / 2).toFixed(1)},${(CREW.y + CREW.h / 2).toFixed(1)} area ${(CREW.w * CREW.h / (GAP.w * GAP.h) * 100).toFixed(1)}% nosig ${nosig ? 1 : 0}`
+      + ' | CREWINK ' + ((l) => (l.length ? l.join(', ') : 'none'))(hitList(nosig ? '#crew .ns-big, #crew .ns-sub' : '#crew .cr-row b, #crew .cr-row small, #crew .cr-bar, #crew .cr-dot, #crew .cr-head b, #crew .cr-head span'))
+      + ' | CREWR ' + (() => { const r = rectOf($('#crew')); return `${Math.round(r.x)},${Math.round(r.y)},${Math.round(r.w)},${Math.round(r.h)}`; })();
+    if (Q.get('crewbox') === '1' && !$('#gapbox')) { const d = document.createElement('div'); d.id = 'gapbox'; Object.assign(d.style, { position: 'absolute', left: GAP.x + 'px', top: GAP.y + 'px', width: GAP.w + 'px', height: GAP.h + 'px', outline: '2px dashed #ffd84a', pointerEvents: 'none', zIndex: 50 }); $('#crew').parentElement.appendChild(d); $('#crew').style.outline = '2px solid #ff5fd0'; }
     if (Q.get('guard') === '1') FACES.forEach((f) => { const d = document.createElement('div'); d.className = 'guard'; Object.assign(d.style, { left: f.x + 'px', top: f.y + 'px', width: f.w + 'px', height: f.h + 'px' }); stage.appendChild(d); });
   }
   window.__overflowAll = () => { const out = []; for (let m = 0; m < MENU.length; m++) { setActive(m, false); out.push(MENU[m].id + ':' + overflowCheck()); } setActive(active, false); return out.join(' | '); };
