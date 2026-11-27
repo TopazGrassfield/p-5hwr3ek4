@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>LeftBehind — 포터블 콘솔 시안 013 (012 구조 + 011 버튼 + 복잡한 콘솔 실루엣)</title>
+<title>LeftBehind — 포터블 콘솔 시안 015 (원정대 상태 표시 + 오른쪽 육각 10% 확대)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="css/menu.css">
 </head>
@@ -91,11 +91,16 @@
               <div class="ck-time">14:32<small>:07</small></div>
               <div class="ck-bot"><span>심도 11 · 방 3</span><span class="ck-bars"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span></div>
             </div>
+            <!-- 왼쪽 구역 아래: 원정대 상태 표시 (버튼 아님 — 누를 수 없는 납작한 홀로그램 칸, JS가 줄을 채움) -->
+            <div id="crew" data-glass="crew" aria-label="원정대 상태"><svg class="crew-line" viewBox="0 0 180 128" aria-hidden="true"><path id="crewPath"/></svg>
+              <div class="cr-head"><b>원정대 상태</b><span><i class="cr-dot hurt"></i>부상 1</span></div>
+              <ul id="crewRows"></ul>
+            </div>
             <div class="zone-tag" id="tagL"><b>L</b>원정 관리<i></i></div>
             <div class="zone-tag r" id="tagR"><i></i>기록 · 시스템<b>R</b></div>
           </div>
 
-          <!-- z 40: 물리 버튼 층 (왼쪽 = 휜 큰 버튼 4 + 대원 카드 / 오른쪽 = 정사각 아이콘 6 + 돌아가기) -->
+          <!-- z 40: 물리 버튼 층 (왼쪽 = 휜 큰 버튼 4 / 오른쪽 = 육각 6 + 돌아가기 육각) -->
           <div class="z" id="L-keys">
             <nav id="leftKeys" aria-label="주 메뉴"></nav>
             <nav id="rightKeys" aria-label="기록·시스템"></nav>

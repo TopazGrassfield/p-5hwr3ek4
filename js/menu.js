@@ -182,7 +182,7 @@
     });
     return d + 'Z';
   }
-  const HX = { W: 112, H: 97, g: 10, x0: 1312, y0: 212, r: 10 };
+  const HX = { W: 124, H: 107, g: 10, x0: 1262, y0: 204, r: 11 }; // 014의 112×97에서 약 10% 확대. 화면 쪽 빈 띠를 줄이려고 x0 1312 → 1262
   const HDY = HX.H + HX.g, HDX = HDY * Math.sqrt(3) / 2;
   const hcen = (c, rr) => ({ x: HX.x0 + HX.W / 2 + c * HDX, y: HX.y0 + HX.H / 2 + rr * HDY });
   const HPOS = [{ c: 0, rr: 0 }, { c: 1, rr: 0.5 }, { c: 2, rr: 0 }, { c: 0, rr: 1 }, { c: 1, rr: 1.5 }, { c: 2, rr: 1 }];
@@ -191,17 +191,30 @@
     const c = hcen(p.c, p.rr);
     KEYS.push({ kind: 'sq', hex: p, menu: 4 + k, x: c.x - HX.W / 2, y: c.y - HX.H / 2, w: HX.W, h: HX.H, d: HEXD });
   });
-  KEYS.push({ kind: 'card', x: 16, y: 556, w: 132, h: 150, d: rectPathL(132, 150, 16, 8) }); // 폭 132: 마우스 오른쪽 위 끝(판이 오른쪽으로 기울 때)에도 오팔 얼굴에 닿지 않게
   { const c = hcen(1, 2.5); KEYS.push({ kind: 'closek', hex: { c: 1, rr: 2.5 }, x: c.x - HX.W / 2, y: c.y - HX.H / 2, w: HX.W, h: HX.H, d: HEXD }); }
-  const CARD = KEYS.length - 2, CLOSE = KEYS.length - 1;
+  const CLOSE = KEYS.length - 1;
 
-  const holder = { big: $('#leftKeys'), card: $('#leftKeys'), sq: $('#rightKeys'), closek: $('#rightKeys') };
-  let cardIdx = Math.max(0, Math.min(3, num('card', 0) | 0)); // ?card=0~3 카드 대원 (넘침 검사용)
-  function cardHTML() {
-    const m = SQUAD[cardIdx];
-    return `<div class="c-top"><span class="c-port">${m.k}</span><div class="c-nm">${m.n}</div></div><div class="c-role">${m.r}</div>
-      <div class="c-hp"><span>체력</span><b>${m.hp}</b><small>/ ${m.max}</small></div><div class="c-id">${m.id}</div><div class="c-nav">${cardIdx + 1}/4 ▸</div>`;
+  /* 원정대 상태 표시 (버튼 아님): 왼쪽 큰 버튼 4개 바로 아래 (간격 12 = 버튼 간격).
+     왼쪽 변은 버튼 바깥 호와 같은 중심 (1200,430)의 반지름 1156 호 → 버튼 곡선과 나란히 휘고 손잡이 안쪽에 들어감.
+     오른쪽 끝 x 184, 아래 끝 y 640: 마우스가 오른쪽 끝(판이 오른쪽으로 다가옴)·떠다님 최저점일 때도 토파즈·오팔 얼굴에 닿지 않게 (160×150일 때 34×11px, 142×136일 때 15×3px 닿음 → 줄임). */
+  const CREW = { x: 46, y: 508, w: 138, h: 132, r: 1156 };
+  {
+    const lx = (y) => LA.cx - Math.sqrt(CREW.r * CREW.r - (y - LA.cy) ** 2) - CREW.x;
+    const { w, h } = CREW, t = lx(CREW.y), b = lx(CREW.y + h);
+    CREW.d = `M${f1(t)} 0 H${w - 12} L${w} 12 V${h - 8} L${w - 8} ${h} H${f1(b)} A${CREW.r} ${CREW.r} 0 0 1 ${f1(t)} 0 Z`;
+    CREW.lx = lx;
+    const el = $('#crew');
+    Object.assign(el.style, { left: CREW.x + 'px', top: CREW.y + 'px', width: w + 'px', height: h + 'px', clipPath: `path("${CREW.d}")` });
+    el.querySelector('svg').setAttribute('viewBox', `0 0 ${w} ${h}`);
+    $('#crewPath').setAttribute('d', CREW.d);
+    $('#crewRows').innerHTML = SQUAD.map((m, i) => {
+      const hurt = m.hp / m.max <= 0.5;
+      return `<li class="cr-row${hurt ? ' hurt' : ''}" style="padding-left:${f1(lx(CREW.y + 30 + i * 25 + 12) + 8)}px"><i class="cr-dot${hurt ? ' hurt' : ''}" title="${hurt ? '부상' : '정상'}"></i><b>${m.n}</b><small>${m.hp}/${m.max}</small><span class="cr-bar"><i style="width:${Math.round(m.hp / m.max * 100)}%"></i></span></li>`;
+    }).join('');
+    el.querySelector('.cr-head').style.paddingLeft = f1(t + 10) + 'px';
   }
+
+  const holder = { big: $('#leftKeys'), sq: $('#rightKeys'), closek: $('#rightKeys') };
   KEYS.forEach((K, i) => {
     const w = document.createElement('div');
     w.className = 'kw';
@@ -215,10 +228,9 @@
     } else if (K.kind === 'sq') {
       const m = MENU[K.menu];
       inner = `<span class="k-no">${m.no}</span><span class="k-ic"><svg viewBox="0 0 24 24">${ICON[m.id]}</svg></span><b class="k-nm">${m.ko}</b>${m.badge ? `<span class="k-badge">${m.badge}</span>` : ''}<i class="k-led"></i>`;
-    } else if (K.kind === 'card') inner = cardHTML();
-    else inner = '<span class="k-ic"><svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5"/><path d="M4 12h10a6 6 0 0 1 6 6"/></svg></span><b>돌아가기</b><kbd>Esc</kbd>';
+    } else inner = '<span class="k-ic"><svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5"/><path d="M4 12h10a6 6 0 0 1 6 6"/></svg></span><b>돌아가기</b><kbd>Esc</kbd>';
     const sx = (K.w + 10) / K.w, sy = (K.h + 12) / K.h;
-    w.innerHTML = `<button class="kb ${K.kind}" data-i="${i}" data-panel="key-${K.kind}-${i}" tabindex="-1" aria-label="${K.menu != null ? MENU[K.menu].ko : (K.kind === 'card' ? '대원 카드' : '돌아가기')}" style="width:${f1(K.w)}px;height:${f1(K.h + 10)}px">
+    w.innerHTML = `<button class="kb ${K.kind}" data-i="${i}" data-panel="key-${K.kind}-${i}" tabindex="-1" aria-label="${K.menu != null ? MENU[K.menu].ko : '돌아가기'}" style="width:${f1(K.w)}px;height:${f1(K.h + 10)}px">
       <span class="kshadow" style="height:${f1(K.h)}px"><i></i></span>
       <svg class="ksock" style="height:${f1(K.h)}px;top:5px" viewBox="0 0 ${f1(K.w)} ${f1(K.h)}"><path vector-effect="non-scaling-stroke" transform="translate(${f1(K.w / 2)} ${f1(K.h / 2)}) scale(${sx.toFixed(4)} ${sy.toFixed(4)}) translate(${f1(-K.w / 2)} ${f1(-K.h / 2)})" d="${K.d}"/></svg>
       <span class="kedge" style="height:${f1(K.h)}px"></span>
@@ -440,12 +452,12 @@
     add($('#sweep'), [{ top: '430px', opacity: 0 }, { top: '430px', opacity: 1, offset: .1 }, { top: '40px', opacity: .8, offset: .5 }, { top: '780px', opacity: 0 }], 620, 560, 'cubic-bezier(.4,0,.2,1)');
     Object.entries(Z).forEach(([id, z]) => add($('#' + id), [{ translate: '0 0 0px' }, { translate: `0 0 ${z * 1.25}px`, offset: .7 }, { translate: `0 0 ${z}px` }], 700, 560, OUT));
     add(ringSvg, [{ opacity: 0, transform: 'scale(.8) rotate(-30deg)', transformOrigin: '820px 430px' }, { opacity: 1, offset: .3 }, { opacity: 1, transform: 'scale(1) rotate(0deg)', transformOrigin: '820px 430px' }], 820, 680, OUT);
-    [$('#title'), $('#status'), $('#panel'), $('#hints'), $('#clock'), $('#tagL'), $('#tagR')].forEach((el, i) =>
+    [$('#title'), $('#status'), $('#panel'), $('#hints'), $('#clock'), $('#tagL'), $('#tagR'), $('#crew')].forEach((el, i) =>
       add(el, [{ opacity: 0, clipPath: 'inset(0 0 100% 0)' }, { opacity: 1, clipPath: 'inset(0 0 0% 0)' }], 960 + i * 60, 320, 'steps(8, end)'));
-    const ORDER = [0, 1, 2, 3, CARD, 4, 5, 6, 7, 8, 9, CLOSE];
+    const ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, CLOSE];
     ORDER.forEach((i, k) => {
-      const left = i < 4 || i === CARD;
-      const kk = left ? k : k - 5;
+      const left = i < 4;
+      const kk = left ? k : k - 4;
       add(KEYS[i].wrap, [
         { transform: `translate3d(${left ? -40 : 40}px,-18px,150px) scale(1.12)`, opacity: 0 }, { opacity: 1, offset: .28 },
         { transform: 'translate3d(0,4px,-12px) scale(.98)', offset: .6 }, { transform: 'translate3d(0,-1px,4px) scale(1.006)', offset: .8 }, { transform: 'none', opacity: 1 }],
@@ -512,7 +524,6 @@
   function activate(i) {
     const K = KEYS[i];
     if (K.menu != null) setActive(K.menu, true);
-    else if (K.kind === 'card') { cardIdx = (cardIdx + 1) % SQUAD.length; K.el.querySelector('.kface').innerHTML = K.el.querySelector('.kface').innerHTML.replace(/<div class="c-top">[\s\S]*$/, '') + cardHTML(); }
     else if (!busy) close();
   }
   function bindPress(el, onRelease, hitEl) {
@@ -647,8 +658,26 @@
     const body = $('#scrBody');
     if (body.scrollHeight > body.offsetHeight + 1 || body.scrollWidth > body.offsetWidth + 1) bad.push(`screen:${MENU[active].id}(${body.scrollWidth}x${body.scrollHeight}/${body.offsetWidth}x${body.offsetHeight})`);
     // 화면 위 홀로그램 줄(제목·상태·안내·시계·구역 이름)이 칸을 넘는지
-    ['#title', '#status', '#hints', '#clock', '#tagL', '#tagR', '.scr-head', '.scr-foot'].forEach((s) => { const e = $(s); if (e.scrollWidth > e.clientWidth + 1) bad.push(`holo:${s}(${e.scrollWidth}>${e.clientWidth})`); });
+    ['#title', '#status', '#hints', '#clock', '#tagL', '#tagR', '.scr-head', '.scr-foot', '#crew .cr-head'].forEach((s) => { const e = $(s); if (e.scrollWidth > e.clientWidth + 1) bad.push(`holo:${s}(${e.scrollWidth}>${e.clientWidth})`); });
+    // 원정대 상태 칸: 줄이 칸을 넘거나, 글자가 휜 왼쪽 변·깎인 모서리 밖으로 나가는지
+    { const P = new Path2D(CREW.d), box = $('#crew');
+      $$('#crew b, #crew small, #crew .cr-bar, #crew .cr-dot').forEach((el) => {
+        const r = el.getBoundingClientRect(), o = box.getBoundingClientRect(), s = stage._s || 1;
+        const x = (r.left - o.left) / s, y = (r.top - o.top) / s, w = r.width / s, h = r.height / s;
+        if (el.scrollWidth > el.clientWidth + 1 || ![[x, y], [x + w, y], [x, y + h], [x + w, y + h]].every((p) => cv.isPointInPath(P, p[0], p[1]))) bad.push('crew:' + (el.textContent || el.className));
+      });
+      if ($('#crewRows').offsetTop + $('#crewRows').offsetHeight > CREW.h) bad.push('crew:rows-height'); }
     return bad.length ? bad.join(',') : 'none';
+  }
+  // 실루엣 안쪽 검사 (평면 좌표): 버튼·상태 칸의 네 모서리가 윤곽 안에 있고 윤곽선에서 10px 이상 떨어져 있는지 + 가장 가까운 거리
+  function silCheck() {
+    const P = new Path2D(SIL); cv.lineWidth = 20;
+    const boxes = KEYS.map((K, i) => [`key${i}`, K.x, K.y, K.w, K.h + 10]).concat([['crew', CREW.x, CREW.y, CREW.w, CREW.h], ['clock', 1301, 80, 248, 110]]);
+    const out = [];
+    boxes.forEach(([n, x, y, w, h]) => { if (![[x, y], [x + w, y], [x, y + h], [x + w, y + h]].every((p) => cv.isPointInPath(P, p[0], p[1]) && !cv.isPointInStroke(P, p[0], p[1]))) out.push(n); });
+    const sx = (y) => { let x = 0; while (x < 400 && !cv.isPointInPath(P, x, y)) x++; return x; }; // 왼쪽 윤곽 x
+    const crewGap = Math.min(...[CREW.y, CREW.y + CREW.h].map((y) => CREW.x + CREW.lx(y) - sx(y)));
+    return (out.length ? 'OUT ' + out.join(',') : 'inside') + ` crewGap ${crewGap.toFixed(1)} hexR ${Math.round(KEYS[6].x + KEYS[6].w)} hexL ${Math.round(KEYS[4].x)}`;
   }
   function tilt() {
     const c = (id) => { const r = rectOf($(id)); return { x: r.x + r.w / 2, y: r.y + r.h / 2 }; };
@@ -663,6 +692,7 @@
       + ` | PANEL ${Math.round(g.x)},${Math.round(g.y)} ${Math.round(g.w)}x${Math.round(g.h)} center ${Math.round(g.x + g.w / 2)},${Math.round(g.y + g.h / 2)}`
       + ' | ' + tilt()
       + ' | KEYS ' + kb.map((b) => { const r = rectOf(b.querySelector('.kface')); return `${Math.round(r.x)},${Math.round(r.y)},${Math.round(r.w)},${Math.round(r.h)}`; }).join(';')
+      + ' | SIL ' + silCheck()
       + ' | OVERFLOW ' + overflowCheck();
     if (Q.get('guard') === '1') FACES.forEach((f) => { const d = document.createElement('div'); d.className = 'guard'; Object.assign(d.style, { left: f.x + 'px', top: f.y + 'px', width: f.w + 'px', height: f.h + 'px' }); stage.appendChild(d); });
   }

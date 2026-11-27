@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>LeftBehind — 포터블 콘솔 시안 013 (012 구조 + 011 버튼 + 복잡한 콘솔 실루엣)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="css/menu.css">
+</head>
+<body class="theme-k1">
+<div id="viewport">
+<div id="stage">
+
+  <!-- 인게임 장면 (메뉴가 열리면 흐림·어둡게) -->
+  <div id="bg"></div>
+  <div id="shade"></div>
+  <canvas id="grain" width="960" height="540"></canvas>
+
+  <!-- 바닥 투영 빛 -->
+  <div id="floor"><i class="beam"></i><i class="pool"></i><i class="refl"></i><i class="pool core"></i></div>
+
+  <!-- 닫힌 상태: 구석의 메뉴 버튼 -->
+  <button id="openBtn" class="hud-btn" aria-label="메뉴 열기"><i class="burger"></i><b>메뉴</b><kbd>Esc</kbd></button>
+
+  <!-- 3D 장면: 떠 있는 콘솔 (평면 1640×860) -->
+  <div id="scene3d">
+    <div id="float">
+      <div id="rise">
+        <div id="screen" aria-hidden="true">
+
+          <!-- z 0: 유리 바탕 — 콘솔 실루엣 마스크 + 가운데 화면 유리 -->
+          <div class="z" id="glass" data-glass="glass">
+            <i class="tint"></i><i class="scr-glass"></i><i class="sheen"></i><i class="scanlines"></i><i class="sweep" id="sweep"></i>
+          </div>
+
+          <!-- z 2: 콘솔 실루엣 — 옅은 푸른 발광선 여러 겹 (윤곽·호·브래킷·눈금·홈) -->
+          <svg class="z" id="sil" viewBox="0 0 1640 860" width="1640" height="860">
+            <defs><filter id="silBlur" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+            <g id="decoFar"></g>
+            <path id="silGlow" class="sil-glow" pathLength="1" filter="url(#silBlur)"/>
+            <path id="silLine" class="sil-line" pathLength="1"/>
+            <g id="decoMid"></g>
+            <g id="decoNear"></g>
+            <g id="scrEdge"></g>
+          </svg>
+
+          <!-- z 10: 화면 뒤 계기 링 (옅게) -->
+          <div class="z" id="L-ring">
+            <svg id="ring" viewBox="0 0 1640 860" width="1640" height="860">
+              <defs><path id="codePath" d=""/></defs>
+              <circle class="hl" cx="820" cy="430" r="300" stroke-width="1.4" opacity=".3"/>
+              <g id="ticks" class="spin-slow"></g>
+              <g class="spin-rev">
+                <circle class="hl" cx="820" cy="430" r="286" stroke-width="1.2" stroke-dasharray="2 9" opacity=".25"/>
+                <circle class="acc-arc" cx="820" cy="430" r="314" stroke-width="4" stroke-dasharray="110 380 34 1450"/>
+              </g>
+              <g class="spin-code"><text class="code-ring"><textPath href="#codePath">원정 일시정지 · 감염 구역 심도 11 · 구조 신호 대기 · 착륙지 연결 유지 · 기록 동기화 0003 · 원정 일시정지 · 감염 구역 심도 11 · 구조 신호 대기 ·</textPath></text></g>
+            </svg>
+          </div>
+
+          <!-- z 22: 홀로그램 글자 층 -->
+          <div class="z" id="L-holo">
+            <div id="title" data-glass="title">
+              <h1>일시정지</h1>
+              <div class="t-sub">관리기구 휴대 단말 · KG-07</div>
+            </div>
+            <!-- 가운데 화면 (012 구조) -->
+            <div id="status" data-glass="status">
+              <div class="st-i"><span class="st-k">위치</span><span class="st-v"><b>심도 11</b> 감염 구역 · 방 3</span></div>
+              <div class="st-i"><span class="st-k">재화</span><span class="st-v coins"><i class="c-g"></i><b>3</b>금 <i class="c-s"></i><b>4</b>은 <i class="c-c"></i><b>5</b>동</span></div>
+              <div class="st-i"><span class="st-k">구조 신호</span><span class="st-v"><i class="sig-led"></i>대기</span></div>
+            </div>
+            <section id="panel" data-glass="panel">
+              <header class="scr-head">
+                <span class="scr-no" id="scrNo">01</span>
+                <h2 id="scrTitle">원정대</h2>
+                <span class="scr-code" id="scrCode">SQUAD</span>
+                <span class="scr-live"><i></i>단말 연결</span>
+              </header>
+              <div class="scr-body" id="scrBody"></div>
+              <footer class="scr-foot"><span id="scrFoot">감염 구역 · 심도 11 · 방 3 · 전투 방</span><span class="tmp">보기용 임시 값</span></footer>
+              <i class="panel-sweep" id="pSweep"></i>
+            </section>
+            <div id="hints" data-glass="hints">
+              <span class="kc">↑</span><span class="kc">↓</span><span class="kc">←</span><span class="kc">→</span><em>이동</em>
+              <span class="kc">Enter</span><em>선택</em><span class="kc">Esc</span><em>닫기</em>
+              <span class="h-sep"></span><span class="h-note">전투 차례 멈춤</span>
+            </div>
+            <!-- 오른쪽 구역 위: 시계·상태 블록 (011) -->
+            <div id="clock" data-glass="clock">
+              <div class="ck-top"><span>원정 제12일</span><span class="ck-led"><i></i>단말 82%</span></div>
+              <div class="ck-time">14:32<small>:07</small></div>
+              <div class="ck-bot"><span>심도 11 · 방 3</span><span class="ck-bars"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span></div>
+            </div>
+            <div class="zone-tag" id="tagL"><b>L</b>원정 관리<i></i></div>
+            <div class="zone-tag r" id="tagR"><i></i>기록 · 시스템<b>R</b></div>
+          </div>
+
+          <!-- z 40: 물리 버튼 층 (왼쪽 = 휜 큰 버튼 4 + 대원 카드 / 오른쪽 = 정사각 아이콘 6 + 돌아가기) -->
+          <div class="z" id="L-keys">
+            <nav id="leftKeys" aria-label="주 메뉴"></nav>
+            <nav id="rightKeys" aria-label="기록·시스템"></nav>
+          </div>
+
+          <!-- 기울기 측정용 모서리 점 (보이지 않음) -->
+          <i class="probe" id="pTL" style="left:0;top:0"></i><i class="probe" id="pBL" style="left:0;top:858px"></i>
+          <i class="probe" id="pTR" style="left:1638px;top:0"></i><i class="probe" id="pBR" style="left:1638px;top:858px"></i>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="check" hidden></div>
+</div>
+</div>
+
+<!-- 구석 조작판 (터치·마우스, 렌더 때 숨김) -->
+<div id="pad" role="toolbar" aria-label="시안 조작">
+  <button id="padMenu" class="pad-main">메뉴</button>
+  <button data-theme="k1" title="K1 푸른색 통일">1</button>
+  <button data-theme="k2" title="K2 푸른 선 + 노랑">2</button>
+  <button data-theme="k3" title="K3 푸른 선 + 호박색">3</button>
+  <button id="padMotion" title="움직임 켜기/끄기">움직임</button>
+</div>
+<script src="js/menu.js"></script>
+</body>
+</html>
